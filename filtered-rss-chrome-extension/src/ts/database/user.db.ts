@@ -26,7 +26,7 @@ export const userSettingsDatabase: UserSettingsDatabase = new UserSettingsDataba
 
 // models for managed by DAL only
 export class UserSettings {
-    public notificationPopup: boolean = false;
-    public notificationSound: boolean = false;
+    public notificationPopup: boolean = true;
+    public notificationSound: boolean = true;
     public refreshIntervalMinutes: number = 5;
 }

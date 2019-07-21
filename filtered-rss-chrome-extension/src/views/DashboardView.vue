@@ -17,9 +17,8 @@
 <script lang="ts">
   import { Component, Vue } from "vue-property-decorator";
   import { DashboardItemViewModel, Feed, FeedSettings } from "../ts/types";
-  import { getMockConfiguredFeeds } from "../ts/mocks";
-  import { convertFeedsToDashboardItems } from "../ts/converters";
-  import { fetchFeedsAsync } from "../ts/fetcher";
+  import { convertFeedsToDashboardItems } from "@/ts/converters";
+  import { fetchFeedsAsync } from "@/ts/fetcher";
   import { feedsDatabase } from '@/ts/database/feeds.db';
 
   @Component({

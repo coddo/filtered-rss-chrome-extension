@@ -1,4 +1,4 @@
-import { userSettingsDatabase, UserSettings } from "./database/user.db.";
+import { userSettingsDatabase, UserSettings } from "./database/user.db";
 
 class FeedRefreshTimer {
     private timerHandle: number = 0;
