@@ -9,8 +9,7 @@
     </div>
   </div>
   <div class="mt-5 text-white text-center" v-else>
-    <p>You have no feeds configured :(</p>
-    <button class="btn btn-success">Add new feed</button>
+    <no-feeds-message></no-feeds-message>
   </div>
 </template>
 
@@ -19,10 +18,12 @@
   import { DashboardItemViewModel, Feed, FeedSettings } from "../ts/types";
   import { convertFeedsToDashboardItems } from "@/ts/converters";
   import { fetchFeedsAsync } from "@/ts/fetcher";
-  import { feedsDatabase } from '@/ts/database/feeds.db';
+  import { feedsDatabase } from "@/ts/database/feeds.db";
+import NoFeedsMessage from "@/components/NoFeedsMessage.vue";
 
   @Component({
     components: {
+      NoFeedsMessage
     }
   })
   export default class DashboardView extends Vue {
