@@ -1,3 +1,4 @@
+// types used for parsing RSS feed data
 export class FeedItem {
     public title!: string;
     public link!: string;
@@ -26,7 +27,8 @@ export class Feed {
     public settings!: FeedSettings;
 }
 
-export class DashboardItem {
+// view models
+export class DashboardItemViewModel {
     public title!: string;
     public link!: string;
     public date!: string;

@@ -16,9 +16,9 @@
 
 <script lang="ts">
   import { Component, Vue } from "vue-property-decorator";
-  import { DashboardItem } from "../ts/types";
+  import { DashboardItemViewModel, Feed } from "../ts/types";
   import { getMockConfiguredFeeds } from "../ts/mocks";
-  import { convertFeedsToDashboardItems } from "../ts/parser";
+  import { convertFeedsToDashboardItems } from "../ts/converters";
   import { fetchFeedsAsync, getLocalMockFeeds } from "../ts/fetcher";
 
   @Component({
@@ -26,16 +26,17 @@
     }
   })
   export default class DashboardView extends Vue {
-    public items!: DashboardItem[];
+    public items!: DashboardItemViewModel[];
 
     constructor() {
       super();
 
-      this.items = convertFeedsToDashboardItems(getLocalMockFeeds());
+      this.items = [];
     }
 
     async mounted(): Promise<void> {
-      // await fetchFeedsAsync(getMockConfiguredFeeds());
+      const feeds: Feed[] = await fetchFeedsAsync(getMockConfiguredFeeds());
+      this.items = convertFeedsToDashboardItems(feeds);
     }
 
     openLink(link: string): void {

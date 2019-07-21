@@ -1,7 +1,7 @@
-import { Feed, DashboardItem } from "./types";
+import { Feed, DashboardItemViewModel } from "./types";
 
-export function convertFeedsToDashboardItems(feeds: Feed[]): DashboardItem[] {
-    const dashboardItems: DashboardItem[] = [];
+export function convertFeedsToDashboardItems(feeds: Feed[]): DashboardItemViewModel[] {
+    const dashboardItems: DashboardItemViewModel[] = [];
 
     feeds.forEach(feed => {
         if (!feed.channel || !feed.channel.items || feed.channel.items.length === 0) {
@@ -22,7 +22,7 @@ export function convertFeedsToDashboardItems(feeds: Feed[]): DashboardItem[] {
             }
 
             if (isAcceptable) {
-                const dashboardItem: DashboardItem = new DashboardItem();
+                const dashboardItem: DashboardItemViewModel = new DashboardItemViewModel();
                 dashboardItem.title = item.title;
                 dashboardItem.link = item.link;
                 dashboardItem.date = item.pubDate.toLocaleString();
@@ -33,8 +33,5 @@ export function convertFeedsToDashboardItems(feeds: Feed[]): DashboardItem[] {
         });
     });
 
-    const sortedItems: DashboardItem[] = dashboardItems.sort((a, b) => (a.date < b.date) ? 1 : -1);
-    console.log(feeds);
-
-    return sortedItems;
+    return dashboardItems.sort((a, b) => (a.date < b.date) ? 1 : -1);
 }

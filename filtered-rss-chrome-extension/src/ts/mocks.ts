@@ -1,4 +1,4 @@
-import { Feed, FeedChannel, FeedItem, FeedSettings } from "./types";
+import { FeedSettings } from "./types";
 
 export function getMockConfiguredFeeds(): FeedSettings[] {
     return [

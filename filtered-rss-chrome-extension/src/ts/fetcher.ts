@@ -1,23 +1,49 @@
 import { FeedSettings, Feed, FeedChannel, FeedItem } from "./types";
 import * as xmlFeedFileContent from "raw-loader!../static/feed.xml";
 
+const CorsBackend: string = "https://cors-anywhere.herokuapp.com";
+
 export async function fetchFeedsAsync(configuredFeeds: FeedSettings[]): Promise<Feed[]> {
     const feeds: Feed[] = [];
 
+    for (let i: number = 0; i < configuredFeeds.length; i++) {
+        const feed: Feed | null = await fetchFeedDataAsync(configuredFeeds[i]);
+
+        if (feed !== null) {
+            feeds.push(feed);
+        }
+    }
+
     configuredFeeds.forEach(async configuredFeed => {
-        const response: Response = await fetch(configuredFeed.url);
+        const response: Response = await fetch(`${CorsBackend}/${configuredFeed.url}`);
 
         if (!response || response.status !== 200 || !response.body) {
             return;
         }
 
         var documentResponse: any = await response.text();
-        console.log(documentResponse);
 
-        feeds.push(parseFeed(documentResponse, configuredFeed));
+        let parsedFeed: Feed = parseFeed(documentResponse, configuredFeed);
+        console.log(parseFeed);
+        feeds.push(parsedFeed);
     });
 
     return feeds;
+}
+
+async function fetchFeedDataAsync(configuredFeed: FeedSettings): Promise<Feed | null> {
+    const response: Response = await fetch(`${CorsBackend}/${configuredFeed.url}`);
+
+    if (!response || response.status !== 200 || !response.body) {
+        return null;
+    }
+
+    var documentResponse: any = await response.text();
+
+    let parsedFeed: Feed = parseFeed(documentResponse, configuredFeed);
+    console.log(parseFeed);
+
+    return parsedFeed;
 }
 
 function parseFeed(data: string, configuredFeed: FeedSettings): Feed {
@@ -93,9 +119,11 @@ function parseFeedItem(node: ChildNode): FeedItem {
 
 export function getLocalMockFeeds(): Feed[] {
     const feeds: Feed[] = [];
-    feeds.push((parseFeed(xmlFeedFileContent.default, <FeedSettings>{
-        name: "My first feed",
-    })));
+    feeds.push(
+        parseFeed(xmlFeedFileContent.default, <FeedSettings>{
+            name: "My first feed"
+        })
+    );
 
     return feeds;
 }
