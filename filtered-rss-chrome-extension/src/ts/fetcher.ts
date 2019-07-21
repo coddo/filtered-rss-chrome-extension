@@ -98,14 +98,3 @@ function parseFeedItem(node: ChildNode): FeedItem {
 
     return feedItem;
 }
-
-export function getLocalMockFeeds(): Feed[] {
-    const feeds: Feed[] = [];
-    feeds.push(
-        parseFeed(xmlFeedFileContent.default, <FeedSettings>{
-            name: "My first feed"
-        })
-    );
-
-    return feeds;
-}

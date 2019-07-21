@@ -8,7 +8,7 @@
 <script lang="ts">
   import { Component, Vue } from "vue-property-decorator";
   import Navbar from "@/components/Navbar.vue";
-  import { feedRefreshTimer } from "./ts/backround";
+  import { feedRefreshTimer } from "@/ts/backround";
 
   @Component({
     components: {
@@ -27,26 +27,17 @@
 </script>
 
 <style lang="scss">
-  @import "../node_modules/bootstrap/dist/css/bootstrap.css";
+  // bootstrap variable overrides
+  $font-size-base: 0.8rem;
+
+  // import bootstrap scss
+  @import "../node_modules/bootstrap/scss/bootstrap.scss";
 
   #app {
     font-family: "Avenir", Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
     width: 350px;
     height: 500px;
-  }
-
-  #nav {
-    padding: 30px;
-    a {
-      font-weight: bold;
-      color: #2c3e50;
-      &.router-link-exact-active {
-        color: #42b983;
-      }
-    }
   }
 </style>

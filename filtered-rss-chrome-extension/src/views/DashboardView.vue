@@ -8,7 +8,7 @@
       </div>
     </div>
   </div>
-  <div class="mt-5 text-white" v-else>
+  <div class="mt-5 text-white text-center" v-else>
     <p>You have no feeds configured :(</p>
     <button class="btn btn-success">Add new feed</button>
   </div>
@@ -16,10 +16,11 @@
 
 <script lang="ts">
   import { Component, Vue } from "vue-property-decorator";
-  import { DashboardItemViewModel, Feed } from "../ts/types";
+  import { DashboardItemViewModel, Feed, FeedSettings } from "../ts/types";
   import { getMockConfiguredFeeds } from "../ts/mocks";
   import { convertFeedsToDashboardItems } from "../ts/converters";
-  import { fetchFeedsAsync, getLocalMockFeeds } from "../ts/fetcher";
+  import { fetchFeedsAsync } from "../ts/fetcher";
+  import { feedsDatabase } from '@/ts/database/feeds.db';
 
   @Component({
     components: {
@@ -35,7 +36,12 @@
     }
 
     async mounted(): Promise<void> {
-      const feeds: Feed[] = await fetchFeedsAsync(getMockConfiguredFeeds());
+      const configuredFeeds: FeedSettings[] = feedsDatabase.getConfiguredFeeds();
+      if (!configuredFeeds) {
+        return;
+      }
+
+      const feeds: Feed[] = await fetchFeedsAsync(configuredFeeds);
       this.items = convertFeedsToDashboardItems(feeds);
     }
 

@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
-import DashboardView from "./views/DashboardView.vue";
+import DashboardView from "@/views/DashboardView.vue";
 
 Vue.use(Router);
 
@@ -8,14 +8,26 @@ export default new Router({
   routes: [
     {
       path: "/",
-      name: "home",
+      name: "Dashboard",
       component: DashboardView
     },
-    // {
-    //   path: "/about",
-    //   name: "about",
-    //   component: () =>
-    //     import("./views/About.vue")
-    // }
+    {
+      path: "/settings",
+      name: "UserSettings",
+      component: () =>
+        import("@/views/UserSettingsView.vue")
+    },
+    {
+      path: "/feeds",
+      name: "ManageFeeds",
+      component: () =>
+        import("@/views/ManageFeedsView.vue")
+    },
+    {
+      path: "/edit-feed",
+      name: "FeedEditor",
+      component: () =>
+        import("@/views/FeedEditorView.vue")
+    }
   ]
 });
