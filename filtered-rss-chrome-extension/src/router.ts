@@ -24,10 +24,10 @@ export default new Router({
         import("@/views/ManageFeedsView.vue")
     },
     {
-      path: "/edit-feed",
-      name: "FeedEditor",
+      path: "/feeds/add",
+      name: "AddFeedView",
       component: () =>
-        import("@/views/FeedEditorView.vue")
+        import("@/views/AddFeedView.vue")
     }
   ]
 });

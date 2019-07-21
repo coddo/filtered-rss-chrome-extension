@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="bg-secondary">
     <navbar />
-    <div class="p-3">
+    <div>
       <router-view />
     </div>
   </div>
