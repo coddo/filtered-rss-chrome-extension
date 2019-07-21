@@ -4,7 +4,7 @@
       <p class="d-inline mr-2">You have no feeds configured</p>
       <img id="img-sad-face" src="@/static/sad-face.png" alt="sad-face" />
     </div>
-    <button class="btn btn-success mr-2">Add new feed</button>
+    <button class="btn btn-success mr-2" @click="goToAddFeedPage()">Add new feed</button>
   </div>
 </template>
 
@@ -16,7 +16,9 @@
     }
   })
   export default class NoFeedsMessage extends Vue {
-
+    public goToAddFeedPage(): void {
+      this.$router.push("/feeds/add");
+    }
   }
 </script>
 

@@ -19,7 +19,7 @@
   import { convertFeedsToDashboardItems } from "@/ts/converters";
   import { fetchFeedsAsync } from "@/ts/fetcher";
   import { feedsDatabase } from "@/ts/database/feeds.db";
-import NoFeedsMessage from "@/components/NoFeedsMessage.vue";
+  import NoFeedsMessage from "@/components/NoFeedsMessage.vue";
 
   @Component({
     components: {

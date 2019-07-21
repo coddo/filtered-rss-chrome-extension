@@ -1,7 +1,7 @@
 <template>
   <div id="app" class="bg-secondary">
     <navbar />
-    <div>
+    <div id="main-content">
       <router-view />
     </div>
   </div>
@@ -39,7 +39,12 @@
     font-family: "Avenir", Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
     width: 350px;
-    height: 500px;
+
+    #main-content {
+      height: 500px;
+      overflow-y: auto;
+    }
   }
 </style>

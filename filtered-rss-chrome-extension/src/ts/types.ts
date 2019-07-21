@@ -1,3 +1,5 @@
+import { FilterTarget, FilterAction } from "./filters";
+
 // types used for parsing RSS feed data
 export class FeedItem {
     public title!: string;
@@ -7,11 +9,17 @@ export class FeedItem {
     public pubDate!: Date;
 }
 
+export class FeedItemFilter {
+    public target: string = FilterTarget.Unknown;
+    public action: string = FilterAction.Unknown;
+    public value: string = "";
+}
+
 export class FeedSettings {
     public name!: string;
     public url!: string;
 
-    public filters: ((item: FeedItem) => boolean)[] = [];
+    public filters: FeedItemFilter[] = [];
 }
 
 export class FeedChannel {
