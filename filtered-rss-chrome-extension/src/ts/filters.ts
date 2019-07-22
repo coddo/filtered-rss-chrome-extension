@@ -24,17 +24,17 @@ export class FilterTarget {
 export class FilterAction {
     static Unknown: string = "Unknown";
 
-    static Equals: string = "Equals";
-    static NotEquals: string = "NotEquals";
+    static Equals: string = "Is exactly";
+    static NotEquals: string = "Is not exactly";
 
     static Contains: string = "Contains";
-    static NotContains: string = "NotContains";
+    static NotContains: string = "Does not contain";
 
-    static StartWith: string = "StartWith";
-    static NotStartsWith: string = "NotStartsWith";
+    static StartWith: string = "Starts with";
+    static NotStartsWith: string = "Does not start with";
 
-    static EndsWith: string = "EndsWith";
-    static NotEndsWith: string = "NotEndsWith";
+    static EndsWith: string = "Ends with";
+    static NotEndsWith: string = "Does not end with";
 
     static get list(): string[] {
         return [
@@ -71,21 +71,21 @@ export function getFilterTargetValue(filterTarget: string, feedItem: FeedItem): 
 export function getFilterFunction(filterAction: string): (target: string, filterValue: string) => boolean {
     switch (filterAction) {
         case FilterAction.Equals:
-            return (target: string, filterValue: string) => target === filterValue;
+            return (target: string, filterValue: string) => target.toLowerCase() === filterValue.toLowerCase();
         case FilterAction.NotEquals:
-            return (target: string, filterValue: string) => target !== filterValue;
+            return (target: string, filterValue: string) => target.toLowerCase() !== filterValue.toLowerCase();
         case FilterAction.Contains:
-            return (target: string, filterValue: string) => target.includes(filterValue);
+            return (target: string, filterValue: string) => target.toLowerCase().includes(filterValue.toLowerCase());
         case FilterAction.NotContains:
-            return (target: string, filterValue: string) => !target.includes(filterValue);
+            return (target: string, filterValue: string) => !target.toLowerCase().includes(filterValue.toLowerCase());
         case FilterAction.StartWith:
-            return (target: string, filterValue: string) => target.startsWith(filterValue);
+            return (target: string, filterValue: string) => target.toLowerCase().startsWith(filterValue.toLowerCase());
         case FilterAction.NotStartsWith:
-            return (target: string, filterValue: string) => !target.startsWith(filterValue);
+            return (target: string, filterValue: string) => !target.toLowerCase().startsWith(filterValue.toLowerCase());
         case FilterAction.EndsWith:
-            return (target: string, filterValue: string) => target.endsWith(filterValue);
+            return (target: string, filterValue: string) => target.toLowerCase().endsWith(filterValue.toLowerCase());
         case FilterAction.NotEndsWith:
-            return (target: string, filterValue: string) => !target.endsWith(filterValue);
+            return (target: string, filterValue: string) => !target.toLowerCase().endsWith(filterValue.toLowerCase());
         default:
             return () => false;
     }

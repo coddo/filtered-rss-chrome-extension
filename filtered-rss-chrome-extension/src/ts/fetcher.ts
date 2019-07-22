@@ -46,7 +46,7 @@ function parseFeed(data: string, configuredFeed: FeedSettings): Feed {
     if (!channelNodes || channelNodes.length !== 1) {
         return feed;
     }
-    
+
     channelNodes[0].childNodes.forEach(xmlFeedItem => {
         switch (xmlFeedItem.nodeName) {
             case "title": {
