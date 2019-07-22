@@ -1,12 +1,15 @@
 <template>
   <div id="feed-editor">
-    <div class="alert alert-danger" role="alert" v-if="error || parentError">
-      {{ error }} {{ parentError }}
-    </div>
+    <div
+      class="alert alert-danger"
+      role="alert"
+      v-if="error || parentError"
+    >{{ error }} {{ parentError }}</div>
 
     <div id="feed-details" class="mt-3 mx-3 p-3 bg-white">
       <div class="d-flex mb-2">
         <h3 class="pt-1">Details</h3>
+        <img id="loading-spinner" class="ml-1" src="@/static/loading.gif" alt="plop-plop" v-if="isLoading">
         <button class="btn btn-danger ml-auto" @click="cancelAdd()">Cancel</button>
         <button class="btn btn-success ml-1" @click="saveFeed()">Save</button>
       </div>
@@ -97,6 +100,7 @@
     private readonly EVENT_SAVE: string = "save";
 
     private clearErrorTimeoutHandle: number = 0;
+    public isLoading: boolean = false;
     public error: string | null = null;
 
     @Prop(String)
@@ -135,11 +139,16 @@
     }
 
     public async saveFeed(): Promise<void> {
-      if (!await this.isDataValidAsync()) {
-        return;
-      }
+      try {
+        this.isLoading = true;
+        if (!await this.isDataValidAsync()) {
+          return;
+        }
 
-      this.$emit(this.EVENT_SAVE);
+        this.$emit(this.EVENT_SAVE);
+      } finally {
+        this.isLoading = false;
+      }
     }
 
     public cancelAdd(): void {
@@ -194,6 +203,11 @@
   #feed-filters {
     max-height: 250px;
     overflow-y: auto;
+  }
+
+  #loading-spinner {
+    width: 36px;
+    height: 36px;
   }
 </style>
 
