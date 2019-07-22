@@ -42,9 +42,12 @@ function parseFeed(data: string, configuredFeed: FeedSettings): Feed {
     const parser: DOMParser = new DOMParser();
     var xmlDocument: Document = parser.parseFromString(data, "application/xml");
 
-    const xmlFeedItems: NodeListOf<ChildNode> = xmlDocument.firstChild!.firstChild!.childNodes;
-
-    xmlFeedItems.forEach(xmlFeedItem => {
+    const channelNodes: HTMLCollectionOf<Element> = xmlDocument.getElementsByTagName("channel");
+    if (!channelNodes || channelNodes.length !== 1) {
+        return feed;
+    }
+    
+    channelNodes[0].childNodes.forEach(xmlFeedItem => {
         switch (xmlFeedItem.nodeName) {
             case "title": {
                 feed.channel.title = xmlFeedItem.textContent!;
@@ -65,6 +68,7 @@ function parseFeed(data: string, configuredFeed: FeedSettings): Feed {
         }
     });
 
+    console.log(JSON.stringify(feed));
     return feed;
 }
 
