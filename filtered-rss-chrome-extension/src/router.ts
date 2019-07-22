@@ -25,6 +25,12 @@ export default new Router({
             path: "/feeds/add",
             name: "AddFeedView",
             component: () => import("@/views/AddFeedView.vue")
+        },
+        {
+            path: "/feeds/edit/:feedId",
+            name: "EditFeedView",
+            component: () => import("@/views/EditFeedView.vue"),
+            props: true
         }
     ]
 });

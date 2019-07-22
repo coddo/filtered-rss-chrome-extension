@@ -14,7 +14,7 @@
           alt="plop-plop"
           v-if="isLoading"
         />
-        <button class="btn btn-danger ml-auto" @click="cancelAdd()">Cancel</button>
+        <button class="btn btn-danger ml-auto" @click="cancel()">Cancel</button>
         <button class="btn btn-success ml-1" @click="saveFeed()">Save</button>
       </div>
 
@@ -104,8 +104,8 @@
     private readonly EVENT_SAVE: string = "save";
 
     private clearErrorTimeoutHandle: number = 0;
-    public isLoading: boolean = false;
-    public error: string | null = null;
+    private isLoading: boolean = false;
+    private error: string | null = null;
 
     @Prop(String)
     public parentError!: string | null;
@@ -165,8 +165,9 @@
       }
     }
 
-    public cancelAdd(): void {
-      this.$router.push("/");
+    @Emit("cancel")
+    public cancel(): void {
+      // nothing to do here
     }
 
     private async isDataValidAsync(): Promise<boolean> {

@@ -1,6 +1,6 @@
 <template>
   <div id="feeds-list" v-if="items && items.length > 0">
-    <div class="card" v-for="item in items" v-bind:key="item.title" @click="openLink(item.link)">
+    <div class="card" v-for="item in items" v-bind:key="item.feedName + item.title" @click="openLink(item.link)">
       <div class="card-body mr-auto">
         <h5 class="card-title">{{ item.title }}</h5>
         <h6 class="card-subtitle mb-2 text-muted">{{ item.date }}</h6>
@@ -36,7 +36,7 @@
     }
 
     async mounted(): Promise<void> {
-      const configuredFeeds: FeedSettings[] = feedsDatabase.getConfiguredFeeds();
+      const configuredFeeds: FeedSettings[] = feedsDatabase.getAll();
       if (!configuredFeeds) {
         return;
       }

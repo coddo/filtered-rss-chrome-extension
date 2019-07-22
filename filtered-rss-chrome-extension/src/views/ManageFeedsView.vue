@@ -1,11 +1,10 @@
 <template>
   <div id="feeds-list" v-if="configuredFeeds && configuredFeeds.length > 0">
-    <p>ABC</p>
     <div
       class="card"
       v-for="feed in configuredFeeds"
       v-bind:key="feed.title"
-      @click="openLink(item.link)"
+      @click="editFeed(feed.id)"
     >
       <div class="card-body mr-auto">
         <h5 class="card-title">{{ feed.name }}</h5>
@@ -35,11 +34,18 @@
     constructor() {
       super();
 
-      this.configuredFeeds = feedsDatabase.getConfiguredFeeds();
+      this.configuredFeeds = feedsDatabase.getAll();
+    }
+
+    public editFeed(feedId: string): void {
+      this.$router.push(`/feeds/edit/${feedId}`);
     }
   }
 </script>
 
 <style lang="scss" scoped>
+  #feeds-list .card {
+    cursor: pointer;
+  }
 </style>
 
