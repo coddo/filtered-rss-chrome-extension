@@ -1,6 +1,12 @@
 <template>
   <div>
-    <feed-details :feed="feed" :parent-error="error" @save="editFeed()" @cancel="cancelEdit()"></feed-details>
+    <feed-details
+      :feed="feed"
+      :parent-error="error"
+      show-delete-button
+      @save="editFeed()"
+      @cancel="cancelEdit()"
+    ></feed-details>
   </div>
 </template>
 

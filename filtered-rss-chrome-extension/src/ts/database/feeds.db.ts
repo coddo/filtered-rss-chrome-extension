@@ -80,12 +80,30 @@ class FeedsDatabase {
 
         // check if the feed exists
         if (feedIndex < 0) {
-            return "There is no feed with the given ID";
+            return "This feed is not yet persisted, so it cannot be updated";
         }
 
         // remove the old feed and add the new one
         feeds.splice(feedIndex, 1);
         feeds.push(feed);
+
+        // persist the new array of feeds
+        localStorage.setItem(KEY_CONFIGURED_FEEDS, JSON.stringify(feeds));
+
+        // no error message to return
+        return null;
+    }
+
+    public delete(id: string): string | null {
+        const feeds: FeedSettings[] = this.getAll();
+        const feedIndex: number = feeds.findIndex(f => f.id === id);
+
+        if (feedIndex < 0) {
+            return "This feed is not yet persisted, so it cannot be deleted";
+        }
+
+        // remove the feed from the list
+        feeds.splice(feedIndex, 1);
 
         // persist the new array of feeds
         localStorage.setItem(KEY_CONFIGURED_FEEDS, JSON.stringify(feeds));

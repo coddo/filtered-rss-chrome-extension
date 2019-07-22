@@ -14,7 +14,8 @@
           alt="plop-plop"
           v-if="isLoading"
         />
-        <button class="btn btn-danger ml-auto" @click="cancel()">Cancel</button>
+        <button class="btn btn-danger ml-auto" v-if="showDeleteButton" @click="deleteFeed()">Delete</button>
+        <button class="btn btn-secondary ml-1" @click="cancel()">Cancel</button>
         <button class="btn btn-success ml-1" @click="saveFeed()">Save</button>
       </div>
 
@@ -95,6 +96,7 @@
   import { FeedSettings, FeedItemFilter, Feed } from "@/ts/types";
   import { FilterTarget, FilterAction } from "../ts/filters";
   import { fetchFeedDataAsync } from "@/ts/fetcher";
+  import { feedsDatabase } from "../ts/database/feeds.db";
 
   @Component({
     components: {
@@ -112,6 +114,9 @@
 
     @Prop(FeedSettings)
     public feed!: FeedSettings;
+
+    @Prop(Boolean)
+    public showDeleteButton!: boolean;
 
     constructor() {
       super();
@@ -163,6 +168,15 @@
       } finally {
         this.isLoading = false;
       }
+    }
+
+    public deleteFeed(): void {
+      this.error = feedsDatabase.delete(this.feed.id);
+      if (this.error) {
+        return;
+      }
+
+      this.$router.push("/feeds");
     }
 
     @Emit("cancel")
