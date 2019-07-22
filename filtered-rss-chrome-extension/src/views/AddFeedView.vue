@@ -1,6 +1,6 @@
 <template>
   <div>
-    <feed-details :feed="feed" @save="addFeed()"></feed-details>
+    <feed-details :feed="feed" :parent-error="error" @save="addFeed()"></feed-details>
   </div>
 </template>
 
@@ -16,6 +16,9 @@
     }
   })
   export default class AddFeedView extends Vue {
+    private errorMessageTimeoutHandle: number = 0;
+
+    public error: string | null = null;
     public feed: FeedSettings;
 
     constructor() {
@@ -25,10 +28,15 @@
     }
 
     public addFeed(): void {
-      var success: boolean = feedsDatabase.addConfigurationFeed(this.feed);
+      this.error = feedsDatabase.addConfigurationFeed(this.feed);
 
-      if (success) {
+      if (!this.error) {
         this.$router.push("/");
+      } else {
+        this.errorMessageTimeoutHandle = setTimeout(() => {
+          this.error = null;
+          clearTimeout(this.errorMessageTimeoutHandle);
+        }, 5000);
       }
     }
   }

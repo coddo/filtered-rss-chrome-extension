@@ -68,7 +68,6 @@ function parseFeed(data: string, configuredFeed: FeedSettings): Feed {
         }
     });
 
-    console.log(JSON.stringify(feed));
     return feed;
 }
 

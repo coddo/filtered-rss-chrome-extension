@@ -12,17 +12,15 @@ class FeedsDatabase {
         return feedsValue === null ? [] : (JSON.parse(feedsValue) as FeedSettings[]);
     }
 
-    public addConfigurationFeed(feed: FeedSettings): boolean {
+    public addConfigurationFeed(feed: FeedSettings): string | null {
         const feeds: FeedSettings[] = this.getConfiguredFeeds();
 
         if (feeds.find(f => f.name === feed.name)) {
-            alert(`You already have a feed with this name: ${feed.name}`);
-            return false;
+            return "You already have a feed with this name";
         }
 
         if (feeds.find(f => f.url === feed.url)) {
-            alert(`You already have a feed with this url: ${feed.url}`);
-            return false;
+            return "You already have a feed with this url";
         }
 
         // add the feed to the list
@@ -31,7 +29,8 @@ class FeedsDatabase {
         // persist the new array of feeds
         localStorage.setItem(KEY_CONFIGURED_FEEDS, JSON.stringify(feeds));
 
-        return true;
+        // no error message to return
+        return null;
     }
 }
 

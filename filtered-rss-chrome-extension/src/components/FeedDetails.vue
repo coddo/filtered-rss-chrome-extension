@@ -1,5 +1,9 @@
 <template>
   <div id="feed-editor">
+    <div class="alert alert-danger" role="alert" v-if="error || parentError">
+      {{ error }} {{ parentError }}
+    </div>
+
     <div id="feed-details" class="mt-3 mx-3 p-3 bg-white">
       <div class="d-flex mb-2">
         <h3 class="pt-1">Details</h3>
@@ -80,7 +84,7 @@
 </template>
 
 <script lang="ts">
-  import { Component, Vue, Prop, Emit } from "vue-property-decorator";
+  import { Component, Vue, Prop, Emit, Watch } from "vue-property-decorator";
   import { FeedSettings, FeedItemFilter, Feed } from "@/ts/types";
   import { FilterTarget, FilterAction } from "../ts/filters";
   import { fetchFeedDataAsync } from "@/ts/fetcher";
@@ -92,11 +96,26 @@
   export default class FeedDetails extends Vue {
     private readonly EVENT_SAVE: string = "save";
 
+    private clearErrorTimeoutHandle: number = 0;
+    public error: string | null = null;
+
+    @Prop(String)
+    public parentError!: string | null;
+
     @Prop(FeedSettings)
     public feed!: FeedSettings;
 
     constructor() {
       super();
+    }
+
+    @Watch("error")
+    @Watch("parentError")
+    public errorMessageChanged(): void {
+      this.clearErrorTimeoutHandle = setTimeout(() => {
+        this.error = null;
+        clearTimeout(this.clearErrorTimeoutHandle);
+      }, 5000);
     }
 
     public get filterTargets(): string[] {
@@ -129,36 +148,36 @@
 
     private async isDataValidAsync(): Promise<boolean> {
       if (!this.feed.name) {
-        alert("You haven't specified the feed name");
+        this.error = "You haven't specified the feed name";
         return false;
       }
 
       if (!this.feed.url) {
-        alert("You haven't specified the feed URL");
+        this.error = "You haven't specified the feed URL";
         return false;
       }
 
       for (let i: number = 0; i < this.feed.filters.length; i++) {
         const filter: FeedItemFilter = this.feed.filters[i];
         if (filter.action === FilterTarget.Unknown) {
-          alert(`You haven't specified the target field for filter ${i + 1}`);
+          this.error = `You haven't specified the target field for filter ${i + 1}`;
           return false;
         }
 
         if (filter.target === FilterAction.Unknown) {
-          alert(`You haven't specified the validation action for filter ${i + 1}`);
+          this.error = `You haven't specified the validation action for filter ${i + 1}`;
           return false;
         }
 
         if (!filter.value) {
-          alert(`You haven't specified the validation value for filter ${i + 1}`);
+          this.error = `You haven't specified the validation value for filter ${i + 1}`;
           return false;
         }
       }
 
       const feedResult: Feed | null = await fetchFeedDataAsync(this.feed);
       if (feedResult === null) {
-        alert("This feed seems to be invalid or inexistent")
+        this.error = "This feed seems to be invalid or inexistent";
         return false;
       }
 
