@@ -1,15 +1,19 @@
 <template>
   <div id="feed-editor">
-    <div
-      class="alert alert-danger"
-      role="alert"
-      v-if="error || parentError"
-    >{{ error }} {{ parentError }}</div>
+    <div class="alert alert-danger" role="alert" v-if="error || parentError">
+      <p class="text-center my-0">{{ error }} {{ parentError }}</p>
+    </div>
 
     <div id="feed-details" class="mt-3 mx-3 p-3 bg-white">
       <div class="d-flex mb-2">
         <h3 class="pt-1">Details</h3>
-        <img id="loading-spinner" class="ml-1" src="@/static/loading.gif" alt="plop-plop" v-if="isLoading">
+        <img
+          id="loading-spinner"
+          class="ml-1"
+          src="@/static/loading.gif"
+          alt="plop-plop"
+          v-if="isLoading"
+        />
         <button class="btn btn-danger ml-auto" @click="cancelAdd()">Cancel</button>
         <button class="btn btn-success ml-1" @click="saveFeed()">Save</button>
       </div>
@@ -114,11 +118,21 @@
     }
 
     @Watch("error")
-    @Watch("parentError")
-    public errorMessageChanged(): void {
+    public errorMessageChanged(newValue: string, oldValue: string): void {
+      // clear existing timeout
+      if (this.clearErrorTimeoutHandle > 0) {
+        clearTimeout(this.clearErrorTimeoutHandle);
+        this.clearErrorTimeoutHandle = 0;
+      }
+
+      // ignore if the error was just cleared
+      if (!newValue) {
+        return;
+      }
+
+      // set timeout to clear the error
       this.clearErrorTimeoutHandle = setTimeout(() => {
         this.error = null;
-        clearTimeout(this.clearErrorTimeoutHandle);
       }, 5000);
     }
 

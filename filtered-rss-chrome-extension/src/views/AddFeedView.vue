@@ -36,6 +36,7 @@
         this.errorMessageTimeoutHandle = setTimeout(() => {
           this.error = null;
           clearTimeout(this.errorMessageTimeoutHandle);
+          this.errorMessageTimeoutHandle = 0;
         }, 5000);
       }
     }
