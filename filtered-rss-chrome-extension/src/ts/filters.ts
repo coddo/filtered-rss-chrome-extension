@@ -36,6 +36,8 @@ export class FilterAction {
     static EndsWith: string = "Ends with";
     static NotEndsWith: string = "Does not end with";
 
+    static Regex: string = "Regex";
+
     static get list(): string[] {
         return [
             FilterAction.Unknown,
@@ -46,7 +48,8 @@ export class FilterAction {
             FilterAction.StartWith,
             FilterAction.NotStartsWith,
             FilterAction.EndsWith,
-            FilterAction.NotEndsWith
+            FilterAction.NotEndsWith,
+            FilterAction.Regex
         ];
     }
 }
@@ -86,6 +89,8 @@ export function getFilterFunction(filterAction: string): (target: string, filter
             return (target: string, filterValue: string) => target.toLowerCase().endsWith(filterValue.toLowerCase());
         case FilterAction.NotEndsWith:
             return (target: string, filterValue: string) => !target.toLowerCase().endsWith(filterValue.toLowerCase());
+        case FilterAction.Regex:
+            return (target: string, filterValue: string) => new RegExp(filterValue).test(target);
         default:
             return () => false;
     }
