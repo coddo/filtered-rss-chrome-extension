@@ -1,12 +1,20 @@
 <template>
   <div id="feeds-list" v-if="items && items.length > 0">
-    <div class="card" v-for="item in items" v-bind:key="item.feedName + item.title" @click="openLink(item.link)">
+    <div
+      class="card"
+      v-for="item in items"
+      v-bind:key="item.feedName + item.title"
+      @click="openLink(item.link)"
+    >
       <div class="card-body mr-auto">
         <h5 class="card-title">{{ item.title }}</h5>
         <h6 class="card-subtitle mb-2 text-muted">{{ item.date }}</h6>
         <p class="card-text">{{ item.feedName }}</p>
       </div>
     </div>
+  </div>
+  <div class="mt-5 text-center" v-else-if="isLoading">
+    <img id="loading-spinner" src="@/static/loading.gif" alt="plop-plop" />
   </div>
   <div class="mt-5 text-white text-center" v-else>
     <no-feeds-message></no-feeds-message>
@@ -27,7 +35,8 @@
     }
   })
   export default class DashboardView extends Vue {
-    public items!: DashboardItemViewModel[];
+    private isLoading: boolean = false;
+    private items!: DashboardItemViewModel[];
 
     constructor() {
       super();
@@ -41,8 +50,14 @@
         return;
       }
 
-      const feeds: Feed[] = await fetchFeedsAsync(configuredFeeds);
-      this.items = convertFeedsToDashboardItems(feeds);
+      try {
+        this.isLoading = true;
+
+        const feeds: Feed[] = await fetchFeedsAsync(configuredFeeds);
+        this.items = convertFeedsToDashboardItems(feeds);
+      } finally {
+        this.isLoading = false;
+      }
     }
 
     openLink(link: string): void {
@@ -54,6 +69,11 @@
 <style lang="scss" scoped>
   .card {
     cursor: pointer;
+  }
+
+  #loading-spinner {
+    width: 48px;
+    height: 48px;
   }
 </style>
 
