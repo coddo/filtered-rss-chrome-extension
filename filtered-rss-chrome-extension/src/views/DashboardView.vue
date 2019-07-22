@@ -16,8 +16,15 @@
   <div class="mt-5 text-center" v-else-if="isLoading">
     <img id="loading-spinner" src="@/static/loading.gif" alt="plop-plop" />
   </div>
-  <div class="mt-5 text-white text-center" v-else>
+  <div class="mt-5 text-white text-center" v-else-if="!feeds || feeds.length === 0">
     <no-feeds-message></no-feeds-message>
+  </div>
+  <div class="mt-5 text-white text-center" v-else>
+    <div class="container-fluid mb-5">
+      <p class="d-inline mr-2">There's nothing new on your feed</p>
+      <img id="img-sad-face" src="@/static/sad-face.png" alt="sad-face" />
+    </div>
+    <img id="img-lemons" class="mt-5 text-center" src="@/static/lemons.png" alt />
   </div>
 </template>
 
@@ -36,25 +43,26 @@
   })
   export default class DashboardView extends Vue {
     private isLoading: boolean = false;
+    private feeds: FeedSettings[];
     private items!: DashboardItemViewModel[];
 
     constructor() {
       super();
 
+      this.feeds = feedsDatabase.getAll();
       this.items = [];
     }
 
     async mounted(): Promise<void> {
-      const configuredFeeds: FeedSettings[] = feedsDatabase.getAll();
-      if (!configuredFeeds) {
+      if (!this.feeds) {
         return;
       }
 
       try {
         this.isLoading = true;
 
-        const feeds: Feed[] = await fetchFeedsAsync(configuredFeeds);
-        this.items = convertFeedsToDashboardItems(feeds);
+        const parsedFeeds: Feed[] = await fetchFeedsAsync(this.feeds);
+        this.items = convertFeedsToDashboardItems(parsedFeeds);
       } finally {
         this.isLoading = false;
       }
@@ -74,6 +82,16 @@
   #loading-spinner {
     width: 48px;
     height: 48px;
+  }
+
+  #img-lemons {
+    width: 128px;
+    height: 128px;
+  }
+
+  #img-sad-face {
+    width: 24px;
+    height: 24px;
   }
 </style>
 

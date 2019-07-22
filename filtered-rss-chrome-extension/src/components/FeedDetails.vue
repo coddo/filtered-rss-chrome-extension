@@ -15,7 +15,7 @@
           v-if="isLoading"
         />
         <button class="btn btn-danger ml-auto" v-if="showDeleteButton" @click="deleteFeed()">Delete</button>
-        <button class="btn btn-secondary ml-1" @click="cancel()">Cancel</button>
+        <button class="btn btn-secondary" :class="showDeleteButton ? 'ml-1' : 'ml-auto'" @click="cancel()">Cancel</button>
         <button class="btn btn-success ml-1" @click="saveFeed()">Save</button>
       </div>
 
@@ -29,6 +29,7 @@
           aria-label="Feed display name"
           aria-describedby="feed-name"
           v-model="feed.name"
+          @keyup.enter="saveFeed()"
         />
       </div>
 
@@ -42,6 +43,7 @@
           aria-label="Feed URL"
           aria-describedby="feed-url"
           v-model="feed.url"
+          @keyup.enter="saveFeed()"
         />
       </div>
     </div>
