@@ -7,7 +7,13 @@ class UserSettingsDatabase {
         const settingsValue: string | null = localStorage.getItem(KEY_USER_SETTINGS);
 
         if (settingsValue !== null) {
-            return JSON.parse(settingsValue) as UserSettings;
+            const settingsJson: any = JSON.parse(settingsValue);
+
+            return {
+                notificationPopup: settingsJson.notificationPopup,
+                notificationSound: settingsJson.notificationSound,
+                refreshIntervalMinutes: settingsJson.refreshIntervalMinutes,
+            } as UserSettings;
         }
 
         const settings: UserSettings = new UserSettings();
