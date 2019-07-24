@@ -14,9 +14,29 @@
           alt="plop-plop"
           v-if="isLoading"
         />
-        <button class="btn btn-danger ml-auto" v-if="showDeleteButton" @click="deleteFeed()">Delete</button>
-        <button class="btn btn-secondary" :class="showDeleteButton ? 'ml-1' : 'ml-auto'" @click="cancel()">Cancel</button>
-        <button class="btn btn-success ml-1" @click="saveFeed()">Save</button>
+        <img
+          class="img-btn img-btn-feed-opts ml-auto mt-1"
+          src="@/static/remove.png"
+          alt="delete-feed"
+          title="Delete this feed"
+          v-if="showDeleteButton"
+          @click="deleteFeed()"
+        />
+        <img
+          class="img-btn img-btn-feed-opts mt-1"
+          src="@/static/cancel.png"
+          alt="cancel-changes"
+          title="Cancel changes"
+          :class="showDeleteButton ? 'ml-2' : 'ml-auto'"
+          @click="cancel()"
+        />
+        <img
+          class="img-btn img-btn-feed-opts mt-1 ml-2"
+          src="@/static/ok.png"
+          alt="save-feed"
+          title="Save changes"
+          @click="saveFeed()"
+        />
       </div>
 
       <div class="input-group mb-3">
@@ -53,7 +73,7 @@
         <h3 class="pt-1">Filters</h3>
         <button
           id="btn-add-filter"
-          class="btn btn-success ml-auto mb-2"
+          class="btn btn-success ml-auto mb-2 mt-1"
           title="Add new filter"
           v-if="!feed.filters || feed.filters.length === 0"
           @click="addFilter()"
@@ -81,12 +101,20 @@
 
         <div class="input-group">
           <input class="form-control mr-1" type="text" v-model="feed.filters[filterIndex].value" />
-          <button
-            class="btn btn-danger mr-1"
-            title="Delete this filter"
+          <img
+            class="img-btn img-btn-filter mt-1 mr-1"
+            src="@/static/remove.png"
+            alt="remove-filter"
+            title="Remove this filter"
             @click="removeFilter(filterIndex)"
-          >-</button>
-          <button class="btn btn-success" title="Add new filter" @click="addFilter()">+</button>
+          />
+          <img
+            class="img-btn img-btn-filter mt-1"
+            src="@/static/add.png"
+            alt="add-filter"
+            title="Add new filter"
+            @click="addFilter()"
+          />
         </div>
       </div>
     </div>
@@ -239,6 +267,12 @@
   #loading-spinner {
     width: 36px;
     height: 36px;
+  }
+
+  .img-btn {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
   }
 </style>
 

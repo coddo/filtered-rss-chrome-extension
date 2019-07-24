@@ -10,7 +10,7 @@
         <img class="mr-2" src="@/static/rss.png" alt="manage rss" title="Manage RSS feeds" />
       </router-link>
       <router-link to="/feeds/add">
-        <img class src="@/static/add.png" alt="add rss" title="Add RSS feed" />
+        <img class="p-1" src="@/static/add.png" alt="add rss" title="Add RSS feed" />
       </router-link>
     </div>
   </nav>
