@@ -109,11 +109,18 @@
             @click="removeFilter(filterIndex)"
           />
           <img
-            class="img-btn img-btn-filter mt-1"
+            class="img-btn img-btn-filter mt-1 mr-1"
             src="@/static/add.png"
             alt="add-filter"
             title="Add new filter"
             @click="addFilter()"
+          />
+          <img
+            class="img-btn img-btn-filter mt-1"
+            src="@/static/half_star.png"
+            alt="clone-filter"
+            title="Clone current filter (without value)"
+            @click="cloneFilter(feed.filters[filterIndex])"
           />
         </div>
       </div>
@@ -202,6 +209,13 @@
         default:
           return "Unknown";
       }
+    }
+
+    public cloneFilter(filter: FeedItemFilter): void {
+      this.feed.filters.push({
+        action: filter.action,
+        target: filter.target,
+      } as FeedItemFilter);
     }
 
     public addFilter(): void {
