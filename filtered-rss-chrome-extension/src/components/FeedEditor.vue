@@ -138,10 +138,5 @@
 </script>
 
 <style lang="scss" scoped>
-  #toolbar {
-    .btn {
-      // font-size: 0.7rem;
-    }
-  }
 </style>
 
