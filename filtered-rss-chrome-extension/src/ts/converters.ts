@@ -1,8 +1,8 @@
-import { Feed, DashboardItemViewModel, FeedItem, FeedItemFilter } from "./types";
+import { Feed, DashboardItem, FeedItem, FeedItemFilter } from "./types";
 import { getFilterTargetValue, getFilterFunction } from "./filters";
 
-export function convertFeedsToDashboardItems(feeds: Feed[]): DashboardItemViewModel[] {
-    const dashboardItems: DashboardItemViewModel[] = [];
+export function convertFeedsToDashboardItems(feeds: Feed[]): DashboardItem[] {
+    const dashboardItems: DashboardItem[] = [];
 
     feeds.forEach(feed => {
         if (!feed.channel || !feed.channel.items || feed.channel.items.length === 0) {
@@ -15,8 +15,8 @@ export function convertFeedsToDashboardItems(feeds: Feed[]): DashboardItemViewMo
             if (feed.settings.filters && feed.settings.filters.length > 0) {
                 isAcceptable = false;
 
-                for (let i: number = 0; i < feed.settings.filters.length; i++) {
-                    if (isFeedItemValid(item, feed.settings.filters[i])) {
+                for (const filter of feed.settings.filters) {
+                    if (isFeedItemValid(item, filter)) {
                         isAcceptable = true;
                         break;
                     }
@@ -24,7 +24,7 @@ export function convertFeedsToDashboardItems(feeds: Feed[]): DashboardItemViewMo
             }
 
             if (isAcceptable) {
-                const dashboardItem: DashboardItemViewModel = new DashboardItemViewModel();
+                const dashboardItem: DashboardItem = new DashboardItem();
                 dashboardItem.title = item.title;
                 dashboardItem.link = item.link;
                 dashboardItem.date = item.pubDate.toLocaleString();

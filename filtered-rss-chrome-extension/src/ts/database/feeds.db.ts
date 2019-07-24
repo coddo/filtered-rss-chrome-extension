@@ -2,7 +2,6 @@ import { FeedSettings, FeedItemFilter } from "../types";
 
 // storage keys
 const KEY_CONFIGURED_FEEDS: string = "configured-feeds";
-const KEY_DASHBOARD_ITEMS: string = "dashboard-items";
 
 // database class
 class FeedsDatabase {

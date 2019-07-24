@@ -41,7 +41,7 @@ export class FeedSettings {
 }
 
 // view models
-export class DashboardItemViewModel {
+export class DashboardItem {
     public title!: string;
     public link!: string;
     public date!: string;

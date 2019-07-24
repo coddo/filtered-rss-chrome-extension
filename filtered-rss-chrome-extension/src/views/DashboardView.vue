@@ -24,43 +24,40 @@
 
 <script lang="ts">
   import { Component, Vue } from "vue-property-decorator";
-  import { DashboardItemViewModel, Feed, FeedSettings } from "../ts/types";
+  import { DashboardItem, FeedSettings } from "../ts/types";
   import { convertFeedsToDashboardItems } from "@/ts/converters";
   import { fetchFeedsAsync } from "@/ts/fetcher";
   import { feedsDatabase } from "@/ts/database/feeds.db";
   import NoFeedsMessage from "@/components/NoFeedsMessage.vue";
   import NoNewItemsMessage from '@/components/NoNewItemsMessage.vue';
   import LoadingDashboardPlaceholder from '@/components/LoadingDashboardPlaceholder.vue';
+  import { dashboardService } from "@/ts/core.ts";
 
   @Component({
     components: {
+      LoadingDashboardPlaceholder,
       NoFeedsMessage,
       NoNewItemsMessage,
-      LoadingDashboardPlaceholder,
     }
   })
   export default class DashboardView extends Vue {
     private isLoading: boolean = false;
-    private feeds: FeedSettings[];
-    private items!: DashboardItemViewModel[];
+    private feeds!: FeedSettings[];
+    private items!: DashboardItem[];
 
     constructor() {
       super();
 
-      this.feeds = feedsDatabase.getAll();
+      this.feeds = [];
       this.items = [];
     }
 
     public async mounted(): Promise<void> {
-      if (!this.feeds) {
-        return;
-      }
-
       try {
         this.isLoading = true;
 
-        const parsedFeeds: Feed[] = await fetchFeedsAsync(this.feeds);
-        this.items = convertFeedsToDashboardItems(parsedFeeds);
+        this.feeds = feedsDatabase.getAll();
+        this.items = await dashboardService.getDashboardAsync();
       } finally {
         this.isLoading = false;
       }

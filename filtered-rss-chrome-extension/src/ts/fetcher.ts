@@ -5,8 +5,8 @@ const CorsBackend: string = "https://cors-anywhere.herokuapp.com";
 export async function fetchFeedsAsync(configuredFeeds: FeedSettings[]): Promise<Feed[]> {
     const feeds: Feed[] = [];
 
-    for (let i: number = 0; i < configuredFeeds.length; i++) {
-        const feed: Feed | null = await fetchFeedDataAsync(configuredFeeds[i]);
+    for (const configuredFeed of configuredFeeds) {
+        const feed: Feed | null = await fetchFeedDataAsync(configuredFeed);
 
         if (feed !== null) {
             feeds.push(feed);
@@ -23,31 +23,31 @@ export async function fetchFeedDataAsync(configuredFeed: FeedSettings): Promise<
         return null;
     }
 
-    var documentResponse: any = await response.text();
+    const documentResponse: any = await response.text();
 
     return parseFeed(documentResponse, configuredFeed);
 }
 
 function parseFeed(data: string, configuredFeed: FeedSettings): Feed {
-    const feed: Feed = <Feed>{
-        settings: configuredFeed,
-        channel: <FeedChannel>{
+    const feed: Feed = {
+        channel: {
+            description: "",
             items: [],
-            title: "",
             link: "",
-            description: ""
-        }
-    };
+            title: "",
+        } as FeedChannel,
+        settings: configuredFeed,
+    } as Feed;
 
     const parser: DOMParser = new DOMParser();
-    var xmlDocument: Document = parser.parseFromString(data, "application/xml");
+    const xmlDocument: Document = parser.parseFromString(data, "application/xml");
 
     const channelNodes: HTMLCollectionOf<Element> = xmlDocument.getElementsByTagName("channel");
     if (!channelNodes || channelNodes.length !== 1) {
         return feed;
     }
 
-    channelNodes[0].childNodes.forEach(xmlFeedItem => {
+    channelNodes[0].childNodes.forEach((xmlFeedItem) => {
         switch (xmlFeedItem.nodeName) {
             case "title": {
                 feed.channel.title = xmlFeedItem.textContent!;
@@ -74,7 +74,7 @@ function parseFeed(data: string, configuredFeed: FeedSettings): Feed {
 function parseFeedItem(node: ChildNode): FeedItem {
     const feedItem: FeedItem = new FeedItem();
 
-    node.childNodes.forEach(childNode => {
+    node.childNodes.forEach((childNode) => {
         switch (childNode.nodeName) {
             case "title": {
                 feedItem.title = childNode.textContent!;

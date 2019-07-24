@@ -1,4 +1,5 @@
 import { userSettingsDatabase, UserSettings } from "./database/user.db";
+import { dashboardService } from "./core";
 
 class FeedRefreshTimer {
     private timerHandle: number = 0;
@@ -17,9 +18,12 @@ class FeedRefreshTimer {
         this.timerHandle = 0;
     }
 
-    private timerHandler(): void {
-        console.log("TIMER EXECUTED!");
-        this.restart();
+    private async timerHandler(): Promise<void> {
+        try {
+            await dashboardService.refreshDashboardCache();
+        } finally {
+            this.restart();
+        }
     }
 }
 
