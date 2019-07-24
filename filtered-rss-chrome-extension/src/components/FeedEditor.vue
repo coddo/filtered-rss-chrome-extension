@@ -133,13 +133,13 @@
   import { FeedSettings, FeedItemFilter, Feed } from "@/ts/types";
   import { FilterTarget, FilterAction } from "../ts/filters";
   import { fetchFeedDataAsync } from "@/ts/fetcher";
-  import { feedsDatabase } from "../ts/database/feeds.db";
+  import { feedsDatabase } from "@/ts/database/feeds.db";
 
   @Component({
     components: {
     }
   })
-  export default class FeedDetails extends Vue {
+  export default class FeedEditor extends Vue {
     private readonly EVENT_SAVE: string = "save";
 
     private clearErrorTimeoutHandle: number = 0;

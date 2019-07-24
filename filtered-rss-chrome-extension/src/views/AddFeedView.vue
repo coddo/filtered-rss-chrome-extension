@@ -1,18 +1,18 @@
 <template>
   <div>
-    <feed-details :feed="feed" :parent-error="error" @save="addFeed()" @cancel="cancelAdd()"></feed-details>
+    <feed-editor :feed="feed" :parent-error="error" @save="addFeed()" @cancel="cancelAdd()"></feed-editor>
   </div>
 </template>
 
 <script lang="ts">
   import { Component, Vue } from "vue-property-decorator";
-  import FeedDetails from "@/components/FeedDetails.vue";
+  import FeedEditor from "@/components/FeedEditor.vue";
   import { FeedSettings } from "@/ts/types";
   import { feedsDatabase } from "@/ts/database/feeds.db";
 
   @Component({
     components: {
-      FeedDetails
+      FeedEditor
     }
   })
   export default class AddFeedView extends Vue {
