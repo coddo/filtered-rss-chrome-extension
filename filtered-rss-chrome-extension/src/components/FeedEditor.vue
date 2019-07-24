@@ -4,69 +4,32 @@
       <p class="text-center my-0">{{ error }} {{ parentError }}</p>
     </div>
 
-    <div id="feed-details" class="mt-3 mx-3 p-3 bg-white">
-      <div class="d-flex mb-2">
-        <h3 class="pt-1">Details</h3>
-        <img
-          id="loading-spinner"
-          class="ml-1"
-          src="@/static/loading.gif"
-          alt="plop-plop"
-          v-if="isLoading"
-        />
-        <img
-          class="img-btn img-btn-feed-opts ml-auto mt-1"
-          src="@/static/remove.png"
-          alt="delete-feed"
-          title="Delete this feed"
-          v-if="showDeleteButton"
-          @click="deleteFeed()"
-        />
-        <img
-          class="img-btn img-btn-feed-opts mt-1"
-          src="@/static/cancel.png"
-          alt="cancel-changes"
-          title="Cancel changes"
-          :class="showDeleteButton ? 'ml-2' : 'ml-auto'"
-          @click="cancel()"
-        />
-        <img
-          class="img-btn img-btn-feed-opts mt-1 ml-2"
-          src="@/static/ok.png"
-          alt="save-feed"
-          title="Save changes"
-          @click="saveFeed()"
-        />
-      </div>
-
-      <div class="input-group mb-3">
-        <div class="input-group-prepend">
-          <span class="input-group-text" id="feed-name">Name</span>
-        </div>
-        <input
-          type="text"
-          class="form-control"
-          aria-label="Feed display name"
-          aria-describedby="feed-name"
-          v-model="feed.name"
-          @keyup.enter="saveFeed()"
-        />
-      </div>
-
-      <div class="input-group">
-        <div class="input-group-prepend">
-          <span class="input-group-text" id="feed-url">URL</span>
-        </div>
-        <input
-          type="text"
-          class="form-control"
-          aria-label="Feed URL"
-          aria-describedby="feed-url"
-          v-model="feed.url"
-          @keyup.enter="saveFeed()"
-        />
-      </div>
+    <div id="toolbar" class="d-flex mb-2 py-1 px-3">
+      <img
+        class="img-btn img-btn-feed-opts mt-1"
+        src="@/static/remove.png"
+        alt="delete-feed"
+        title="Delete this feed"
+        v-if="showDeleteButton"
+        @click="deleteFeed()"
+      />
+      <img
+        class="img-btn img-btn-feed-opts mt-1 ml-auto"
+        src="@/static/cancel.png"
+        alt="cancel-changes"
+        title="Cancel changes"
+        @click="cancel()"
+      />
+      <img
+        class="img-btn img-btn-feed-opts mt-1 ml-2"
+        src="@/static/ok.png"
+        alt="save-feed"
+        title="Save changes"
+        @click="saveFeed()"
+      />
     </div>
+
+    <feed-details :feed="feed" :is-loading="isLoading" @save="saveFeed()"></feed-details>
 
     <div id="feed-filters" class="mt-3 mx-3 p-3 bg-white">
       <div class="d-flex">
@@ -134,9 +97,11 @@
   import { FilterTarget, FilterAction } from "../ts/filters";
   import { fetchFeedDataAsync } from "@/ts/fetcher";
   import { feedsDatabase } from "@/ts/database/feeds.db";
+  import FeedDetails from "./FeedDetails.vue";
 
   @Component({
     components: {
+      FeedDetails
     }
   })
   export default class FeedEditor extends Vue {
@@ -294,18 +259,9 @@
 </script>
 
 <style lang="scss" scoped>
-  .input-group .input-group-prepend .input-group-text {
-    width: 60px;
-  }
-
   #feed-filters {
     max-height: 250px;
     overflow-y: auto;
-  }
-
-  #loading-spinner {
-    width: 36px;
-    height: 36px;
   }
 
   .img-btn {
