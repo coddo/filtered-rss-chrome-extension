@@ -26,7 +26,7 @@ class FeedsDatabase {
             feedValue.filters.forEach((filterValue: any) => {
                 const filter: FeedItemFilter = new FeedItemFilter();
                 filter.target = filterValue.target;
-                filter.action = filterValue.actions;
+                filter.action = filterValue.action;
                 filter.value = filterValue.value;
 
                 feed.filters.push(filter);

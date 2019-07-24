@@ -24,17 +24,17 @@ export class FilterTarget {
 export class FilterAction {
     static Unknown: string = "Unknown";
 
-    static Equals: string = "Is exactly";
-    static NotEquals: string = "Is not exactly";
+    static Equals: string = "Equals";
+    static NotEquals: string = "NotEquals";
 
     static Contains: string = "Contains";
-    static NotContains: string = "Does not contain";
+    static NotContains: string = "NotContains";
 
-    static StartWith: string = "Starts with";
-    static NotStartsWith: string = "Does not start with";
+    static StartWith: string = "StartsWith";
+    static NotStartsWith: string = "NotStartsWith";
 
-    static EndsWith: string = "Ends with";
-    static NotEndsWith: string = "Does not end with";
+    static EndsWith: string = "EndsWith";
+    static NotEndsWith: string = "NotEndsWIth";
 
     static Regex: string = "Regex";
 

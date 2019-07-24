@@ -80,7 +80,7 @@
         >Add filters</button>
       </div>
 
-      <div class="mb-3" v-for="(filter, filterIndex) in feed.filters" :key="filterIndex">
+      <div class="mb-4" v-for="(filter, filterIndex) in feed.filters" :key="filterIndex">
         <div class="input-group">
           <select class="custom-select" v-model="feed.filters[filterIndex].target">
             <option
@@ -95,11 +95,11 @@
               v-for="filterAction in filterActions"
               :key="filterIndex + '-' + filterAction"
               :value="filterAction"
-            >{{ filterAction }}</option>
+            >{{ getFilterActionText(filterAction) }}</option>
           </select>
         </div>
 
-        <div class="input-group">
+        <div class="input-group mt-1">
           <input class="form-control mr-1" type="text" v-model="feed.filters[filterIndex].value" />
           <img
             class="img-btn img-btn-filter mt-1 mr-1"
@@ -179,6 +179,31 @@
       return FilterAction.list.filter((value: string) => value !== FilterAction.Unknown);
     }
 
+    public getFilterActionText(filterAction: string): string {
+      switch (filterAction) {
+        case FilterAction.Equals:
+          return "Is exactly";
+        case FilterAction.NotEquals:
+          return "Is not exactly";
+        case FilterAction.Contains:
+          return "Contains";
+        case FilterAction.NotContains:
+          return "Does not contain";
+        case FilterAction.StartWith:
+          return "Starts with";
+        case FilterAction.NotStartsWith:
+          return "Does not start with";
+        case FilterAction.EndsWith:
+          return "Ends with";
+        case FilterAction.NotEndsWith:
+          return "Does not end with";
+        case FilterAction.Regex:
+          return "Regex";
+        default:
+          return "Unknown";
+      }
+    }
+
     public addFilter(): void {
       this.feed.filters.push(new FeedItemFilter());
     }
@@ -215,29 +240,29 @@
     }
 
     private async isDataValidAsync(): Promise<boolean> {
-      if (!this.feed.name) {
+      if (!this.feed.name || this.feed.name === "") {
         this.error = "You haven't specified the feed name";
         return false;
       }
 
-      if (!this.feed.url) {
+      if (!this.feed.url || this.feed.url === "") {
         this.error = "You haven't specified the feed URL";
         return false;
       }
 
       for (let i: number = 0; i < this.feed.filters.length; i++) {
         const filter: FeedItemFilter = this.feed.filters[i];
-        if (filter.action === FilterTarget.Unknown) {
+        if (!filter.target || filter.target === "" || filter.target === FilterTarget.Unknown) {
           this.error = `You haven't specified the target field for filter ${i + 1}`;
           return false;
         }
 
-        if (filter.target === FilterAction.Unknown) {
+        if (!filter.action || filter.action === "" || filter.action === FilterAction.Unknown) {
           this.error = `You haven't specified the validation action for filter ${i + 1}`;
           return false;
         }
 
-        if (!filter.value) {
+        if (!filter.value || filter.value === "") {
           this.error = `You haven't specified the validation value for filter ${i + 1}`;
           return false;
         }
