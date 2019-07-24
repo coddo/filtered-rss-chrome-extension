@@ -4,29 +4,10 @@
       <p class="text-center my-0">{{ error }} {{ parentError }}</p>
     </div>
 
-    <div id="toolbar" class="d-flex mb-2 py-1 px-3">
-      <img
-        class="img-btn-toolbar mt-1"
-        src="@/static/remove.png"
-        alt="delete-feed"
-        title="Delete this feed"
-        v-if="showDeleteButton"
-        @click="deleteFeed()"
-      />
-      <img
-        class="img-btn-toolbar mt-1 ml-auto"
-        src="@/static/cancel.png"
-        alt="cancel-changes"
-        title="Cancel changes"
-        @click="cancel()"
-      />
-      <img
-        class="img-btn-toolbar mt-1 ml-2"
-        src="@/static/ok.png"
-        alt="save-feed"
-        title="Save changes"
-        @click="saveFeed()"
-      />
+    <div id="toolbar" class="d-flex mt-3 mb-2 px-3 bg-secondary">
+      <button class="btn btn-outline-danger" v-if="showDeleteButton" @click="deleteFeed()">Delete</button>
+      <button class="btn btn-secondary ml-auto" @click="cancel()">Cancel</button>
+      <button class="btn btn-success ml-2" @click="saveFeed()">Save</button>
     </div>
 
     <feed-details :feed="feed" :is-loading="isLoading" @save="saveFeed()"></feed-details>
@@ -157,10 +138,10 @@
 </script>
 
 <style lang="scss" scoped>
-  .img-btn-toolbar {
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
+  #toolbar {
+    .btn {
+      // font-size: 0.7rem;
+    }
   }
 </style>
 

@@ -1,5 +1,5 @@
 <template>
-  <div id="feed-details2" class="mt-3 mx-3 p-3 bg-white">
+  <div id="feed-details2" class="mx-3 p-3 bg-white">
     <div class="d-flex mb-2">
       <h3 class="pt-1">Details</h3>
       <img
