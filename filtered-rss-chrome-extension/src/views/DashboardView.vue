@@ -13,19 +13,10 @@
       </div>
     </div>
   </div>
-  <div class="mt-5 text-center" v-else-if="isLoading">
-    <img id="loading-spinner" src="@/static/loading.gif" alt="plop-plop" />
-  </div>
-  <div class="mt-5 text-white text-center" v-else-if="!feeds || feeds.length === 0">
-    <no-feeds-message></no-feeds-message>
-  </div>
-  <div class="mt-5 text-white text-center" v-else>
-    <div class="container-fluid mb-5">
-      <p class="d-inline mr-2">There's nothing new on your feed</p>
-      <img id="img-sad-face" src="@/static/sad-face.png" alt="sad-face" />
-    </div>
-    <img id="img-lemons" class="mt-5 text-center" src="@/static/lemons.png" alt />
-  </div>
+
+  <loading-dashboard-placeholder v-else-if="isLoading"></loading-dashboard-placeholder>
+  <no-feeds-message v-else-if="!feeds || feeds.length === 0"></no-feeds-message>
+  <no-new-items-message v-else></no-new-items-message>
 </template>
 
 <script lang="ts">
@@ -35,10 +26,14 @@
   import { fetchFeedsAsync } from "@/ts/fetcher";
   import { feedsDatabase } from "@/ts/database/feeds.db";
   import NoFeedsMessage from "@/components/NoFeedsMessage.vue";
+  import NoNewItemsMessage from '@/components/NoNewItemsMessage.vue';
+  import LoadingDashboardPlaceholder from '@/components/LoadingDashboardPlaceholder.vue';
 
   @Component({
     components: {
-      NoFeedsMessage
+      NoFeedsMessage,
+      NoNewItemsMessage,
+      LoadingDashboardPlaceholder,
     }
   })
   export default class DashboardView extends Vue {
@@ -53,7 +48,7 @@
       this.items = [];
     }
 
-    async mounted(): Promise<void> {
+    public async mounted(): Promise<void> {
       if (!this.feeds) {
         return;
       }
@@ -68,7 +63,7 @@
       }
     }
 
-    openLink(link: string): void {
+    public openLink(link: string): void {
       window.open(link);
     }
   }
@@ -77,21 +72,6 @@
 <style lang="scss" scoped>
   .card {
     cursor: pointer;
-  }
-
-  #loading-spinner {
-    width: 48px;
-    height: 48px;
-  }
-
-  #img-lemons {
-    width: 128px;
-    height: 128px;
-  }
-
-  #img-sad-face {
-    width: 24px;
-    height: 24px;
   }
 </style>
 

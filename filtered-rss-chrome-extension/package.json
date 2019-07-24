@@ -3,9 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "clean": "rimraf '../css' && rimraf '../js' && rimraf '../img'",
     "serve": "vue-cli-service serve",
-    "build": "(vue-cli-service build) && (npm run clean) && (cpx dist/**/* ../)",
+    "build": "(vue-cli-service build) && (cpx dist/**/* ../)",
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit"
   },

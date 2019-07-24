@@ -5,7 +5,7 @@
     </div>
 
     <div id="toolbar" class="d-flex mt-3 mb-2 px-3 bg-secondary">
-      <button class="btn btn-outline-danger" v-if="showDeleteButton" @click="deleteFeed()">Delete</button>
+      <button class="btn btn-danger" v-if="showDeleteButton" @click="deleteFeed()">Delete</button>
       <button class="btn btn-secondary ml-auto" @click="cancel()">Cancel</button>
       <button class="btn btn-success ml-2" @click="saveFeed()">Save</button>
     </div>
