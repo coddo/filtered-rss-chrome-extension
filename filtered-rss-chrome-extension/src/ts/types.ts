@@ -46,7 +46,7 @@ export class DashboardItemViewModel {
     public link!: string;
     public date!: string;
     public feedName!: string;
-    public isNew: boolean = true;
+    public isNew: boolean = false;
 }
 
 // helper functions

@@ -6,10 +6,13 @@
       v-bind:key="item.feedName + item.title"
       @click="openLink(item.link)"
     >
-      <div class="card-body mr-auto">
-        <h5 class="card-title">{{ item.title }}</h5>
-        <h6 class="card-subtitle mb-2 text-muted">{{ item.date }}</h6>
-        <p class="card-text">{{ item.feedName }}</p>
+      <div class="card-body mr-auto d-inline-flex p-0">
+        <div class="notification-sidebar" :class="item.isNew ? 'bg-success' : ''"></div>
+        <div class="p-3">
+          <h5 class="card-title">{{ item.title }}</h5>
+          <h6 class="card-subtitle mb-2 text-muted">{{ item.date }}</h6>
+          <p class="card-text">{{ item.feedName }}</p>
+        </div>
       </div>
     </div>
   </div>
@@ -72,6 +75,13 @@
 <style lang="scss" scoped>
   .card {
     cursor: pointer;
+
+    .card-body {
+      .notification-sidebar {
+        min-width: 10px;
+        max-width: 10px;
+      }
+    }
   }
 </style>
 
