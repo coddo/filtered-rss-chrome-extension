@@ -5,7 +5,7 @@
     "description": "Filter your RSS feeds to only see what you care about",
 
     "browser_action": {
-        "default_icon": "icon.png",
+        "default_icon": "favicon.png",
         "default_popup": "index.html",
         "default_title": "Your filtered RSS feeds"
     },
