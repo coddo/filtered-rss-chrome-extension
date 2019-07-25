@@ -24,6 +24,7 @@
   import { feedsDatabase } from "@/ts/database/feeds.db";
   import FeedDetails from "./FeedDetails.vue";
   import FeedFilters from "./FeedFilters.vue";
+  import { dashboardService } from '../ts/core';
 
   @Component({
     components: {
@@ -84,17 +85,22 @@
 
         this.$emit(this.EVENT_SAVE);
       } finally {
+        await dashboardService.refreshDashboardCache();
         this.isLoading = false;
       }
     }
 
-    public deleteFeed(): void {
-      this.error = feedsDatabase.delete(this.feed.id);
-      if (this.error) {
-        return;
-      }
+    public async deleteFeed(): Promise<void> {
+      try {
+        this.error = feedsDatabase.delete(this.feed.id);
+        if (this.error) {
+          return;
+        }
 
-      this.$router.push("/feeds");
+        this.$router.push("/feeds");
+      } finally {
+        await dashboardService.refreshDashboardCache();
+      }
     }
 
     private async isDataValidAsync(): Promise<boolean> {
