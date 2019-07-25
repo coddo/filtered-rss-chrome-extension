@@ -6,17 +6,6 @@ import { convertFeedsToDashboardItems } from "./converters";
 import { Notifications } from "./notifications";
 
 class DashboardService {
-    public async getDashboardAsync(): Promise<DashboardItem[]> {
-        const items: DashboardItem[] = dashboardDatabase.get();
-
-        // return the DB data if available
-        if (items && items.length > 0) {
-            return items;
-        }
-
-        return await this.refreshDashboardCache();
-    }
-
     public async refreshDashboardCache(): Promise<DashboardItem[]> {
         // retrieve both data sets
         let dbItems: DashboardItem[] = dashboardDatabase.get();
@@ -40,6 +29,7 @@ class DashboardService {
             } else {
                 item.id = dbItem.id;
                 item.isNew = dbItem.isNew;
+                item.isNotified = dbItem.isNotified;
             }
         }
 

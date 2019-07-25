@@ -78,11 +78,12 @@ export class Notifications {
         const notif: Notification = new Notification(title, config);
 
         if (registerCallbacks) {
-            notif.onclick = notif.onclose = Notifications.notificationClickedOrClosed;
+            notif.onclick = Notifications.notificationClicked;
         }
     }
 
-    private static notificationClickedOrClosed(event: Event): void {
+    private static notificationClicked(event: Event): void {
+        event.preventDefault();
         dashboardDatabase.markAsNotNew((event.target as Notification).tag);
     }
 }

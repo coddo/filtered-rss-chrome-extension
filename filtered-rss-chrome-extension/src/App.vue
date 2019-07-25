@@ -23,7 +23,6 @@
     public mounted(): void {
       Notifications.initialize();
       feedRefreshTimer.restart();
-      dashboardService.refreshDashboardCache();
     }
 
     public beforeDestroy(): void {

@@ -1,11 +1,6 @@
 <template>
-  <div id="feeds-list" v-if="configuredFeeds && configuredFeeds.length > 0">
-    <div
-      class="card"
-      v-for="feed in configuredFeeds"
-      v-bind:key="feed.title"
-      @click="editFeed(feed.id)"
-    >
+  <div id="feeds-list" v-if="feeds && feeds.length > 0">
+    <div class="card" v-for="feed in feeds" v-bind:key="feed.title" @click="editFeed(feed.id)">
       <div class="card-body mr-auto">
         <h5 class="card-title">{{ feed.name }}</h5>
         <h6 class="card-subtitle mb-2 text-muted">{{ feed.url }}</h6>
@@ -29,12 +24,8 @@
     }
   })
   export default class ManageFeedsView extends Vue {
-    private configuredFeeds: FeedSettings[];
-
-    constructor() {
-      super();
-
-      this.configuredFeeds = feedsDatabase.getAll();
+    public get feeds(): FeedSettings[] {
+      return feedsDatabase.getAll();
     }
 
     public editFeed(feedId: string): void {

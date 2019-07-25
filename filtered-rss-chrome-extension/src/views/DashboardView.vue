@@ -43,25 +43,13 @@
   })
   export default class DashboardView extends Vue {
     private isLoading: boolean = false;
-    private feeds!: FeedSettings[];
-    private items!: DashboardItem[];
 
-    constructor() {
-      super();
-
-      this.feeds = [];
-      this.items = [];
+    private get feeds(): FeedSettings[] {
+      return feedsDatabase.getAll();
     }
 
-    public async mounted(): Promise<void> {
-      try {
-        this.isLoading = true;
-
-        this.feeds = feedsDatabase.getAll();
-        this.items = await dashboardService.getDashboardAsync();
-      } finally {
-        this.isLoading = false;
-      }
+    private get items(): DashboardItem[] {
+      return dashboardDatabase.get();
     }
 
     public openItem(item: DashboardItem): void {
