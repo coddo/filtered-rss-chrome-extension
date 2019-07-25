@@ -12,6 +12,7 @@
   import Navbar from "@/components/Navbar.vue";
   import { feedRefreshTimer } from "@/ts/backround";
   import { Notifications } from "@/ts/notifications";
+  import { dashboardService } from './ts/core';
 
   @Component({
     components: {
@@ -22,6 +23,7 @@
     public mounted(): void {
       Notifications.initialize();
       feedRefreshTimer.restart();
+      dashboardService.refreshDashboardCache();
     }
 
     public beforeDestroy(): void {

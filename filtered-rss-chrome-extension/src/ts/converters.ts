@@ -4,12 +4,12 @@ import { getFilterTargetValue, getFilterFunction } from "./filters";
 export function convertFeedsToDashboardItems(feeds: Feed[]): DashboardItem[] {
     const dashboardItems: DashboardItem[] = [];
 
-    feeds.forEach(feed => {
+    feeds.forEach((feed) => {
         if (!feed.channel || !feed.channel.items || feed.channel.items.length === 0) {
             return;
         }
 
-        feed.channel.items.forEach(item => {
+        feed.channel.items.forEach((item) => {
             let isAcceptable: boolean = true;
 
             if (feed.settings.filters && feed.settings.filters.length > 0) {

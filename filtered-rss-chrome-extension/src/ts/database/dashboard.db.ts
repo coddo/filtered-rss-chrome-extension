@@ -17,11 +17,13 @@ class DashboardDatabase {
         JSON.parse(dasboardItemsValue).forEach((dashboardItemValue: any) => {
             const dashboardItem: DashboardItem = new DashboardItem();
 
+            dashboardItem.id = dashboardItemValue.id;
             dashboardItem.title = dashboardItemValue.title;
             dashboardItem.link = dashboardItemValue.link;
             dashboardItem.date = dashboardItemValue.date;
             dashboardItem.feedName = dashboardItemValue.feedName;
             dashboardItem.isNew = dashboardItemValue.isNew;
+            dashboardItem.isNotified = dashboardItemValue.isNotified;
 
             dashboardItems.push(dashboardItem);
         });
@@ -43,7 +45,23 @@ class DashboardDatabase {
         for (const item of items) {
             if (item.id === id) {
                 item.isNew = false;
+                item.isNotified = true;
                 break;
+            }
+        }
+
+        this.set(items);
+    }
+
+    public markAsNotified(ids: string[]): void {
+        const items: DashboardItem[] = this.get();
+
+        for (const id of ids) {
+            for (const item of items) {
+                if (item.id === id) {
+                    item.isNotified = true;
+                    break;
+                }
             }
         }
 

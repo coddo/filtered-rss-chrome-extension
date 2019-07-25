@@ -4,7 +4,7 @@
       class="card"
       v-for="item in items"
       v-bind:key="item.feedName + item.title"
-      @click="openLink(item.link)"
+      @click="openLink(item)"
     >
       <div class="card-body mr-auto d-inline-flex p-0">
         <div class="notification-sidebar" :class="item.isNew ? 'bg-success' : ''"></div>
@@ -32,6 +32,7 @@
   import NoNewItemsMessage from '@/components/NoNewItemsMessage.vue';
   import LoadingDashboardPlaceholder from '@/components/LoadingDashboardPlaceholder.vue';
   import { dashboardService } from "@/ts/core.ts";
+  import { dashboardDatabase } from '../ts/database/dashboard.db';
 
   @Component({
     components: {
@@ -63,8 +64,9 @@
       }
     }
 
-    public openLink(link: string): void {
-      window.open(link);
+    public openItem(item: DashboardItem): void {
+      dashboardDatabase.markAsNotNew(item.id);
+      window.open(item.link);
     }
   }
 </script>

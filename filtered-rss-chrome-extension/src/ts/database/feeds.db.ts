@@ -39,7 +39,7 @@ class FeedsDatabase {
 
     public get(id: string): FeedSettings | null {
         const feeds: FeedSettings[] = this.getAll();
-        const feed: FeedSettings | undefined = feeds.find(feed => feed.id === id);
+        const feed: FeedSettings | undefined = feeds.find((f) => f.id === id);
 
         return feed ? feed : null;
     }
@@ -51,11 +51,11 @@ class FeedsDatabase {
 
         const feeds: FeedSettings[] = this.getAll();
 
-        if (feeds.find(f => f.name === feed.name)) {
+        if (feeds.find((f) => f.name === feed.name)) {
             return "You already have a feed with this name";
         }
 
-        if (feeds.find(f => f.url === feed.url)) {
+        if (feeds.find((f) => f.url === feed.url)) {
             return "You already have a feed with this url";
         }
 
@@ -75,7 +75,7 @@ class FeedsDatabase {
         }
 
         let feeds: FeedSettings[] = this.getAll();
-        const feedIndex: number = feeds.findIndex(f => f.id === feed.id);
+        const feedIndex: number = feeds.findIndex((f) => f.id === feed.id);
 
         // check if the feed exists
         if (feedIndex < 0) {
@@ -95,7 +95,7 @@ class FeedsDatabase {
 
     public delete(id: string): string | null {
         const feeds: FeedSettings[] = this.getAll();
-        const feedIndex: number = feeds.findIndex(f => f.id === id);
+        const feedIndex: number = feeds.findIndex((f) => f.id === id);
 
         if (feedIndex < 0) {
             return "This feed is not yet persisted, so it cannot be deleted";

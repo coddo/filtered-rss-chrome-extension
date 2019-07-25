@@ -16,11 +16,26 @@ export class Notifications {
             return;
         }
 
-        const newItems: DashboardItem[] = items.filter((i: DashboardItem) => i.isNew);
+        // create the notifications for all the new and unnotified items
+        const newItems: DashboardItem[] = items.filter((i: DashboardItem) => i.isNew && !i.isNotified);
+        Notifications.createNotifications(newItems, userSettings);
 
-        // If there is only one item, create a notification just for it, otherwise create a generic notification
-        if (newItems.length === 1) {
-            const item: DashboardItem = newItems[0];
+        // mark the new notifications as notified to user
+        dashboardDatabase.markAsNotified(newItems.map((item: DashboardItem) => item.id));
+    }
+
+    public static initialize(): void {
+        if (Notification.permission === "default") {
+            Notification.requestPermission();
+        }
+    }
+
+    private static createNotifications(items: DashboardItem[], userSettings: UserSettings): void {
+        // create specific notification if there is only one new item
+        // create a generic notification for multiple items
+        if (items.length === 1) {
+            const item: DashboardItem = items[0];
+
             Notifications.createNotification(
                 item.id,
                 item.title,
@@ -30,7 +45,7 @@ export class Notifications {
                 true,
             );
             return;
-        } else if (newItems.length > 1) {
+        } else if (items.length > 1) {
             Notifications.createNotification(
                 "no_id",
                 "New updates in your feeds",
@@ -38,13 +53,7 @@ export class Notifications {
                 Date.now(),
                 userSettings.notificationSound,
                 false,
-            )
-        }
-    }
-
-    public static initialize(): void {
-        if (Notification.permission === "default") {
-            Notification.requestPermission();
+            );
         }
     }
 
@@ -60,6 +69,7 @@ export class Notifications {
         } as NotificationOptions;
 
         try {
+            // configuration specific to the chrome API, which works only when deployed
             config.icon = chrome.extension.getURL("favicon.png");
         } catch {
             // nothing to do here, we're on localhost

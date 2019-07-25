@@ -43,12 +43,16 @@ export class FeedSettings {
 
 // view models
 export class DashboardItem {
+    // data fields
     public id: string;
     public title!: string;
     public link!: string;
     public date!: string;
     public feedName!: string;
+
+    // configuration fields
     public isNew: boolean = false;
+    public isNotified: boolean = false;
 
     constructor() {
         this.id = generateGuid();

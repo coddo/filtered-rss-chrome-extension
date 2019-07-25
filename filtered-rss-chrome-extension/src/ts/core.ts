@@ -35,7 +35,12 @@ class DashboardService {
         for (const item of items) {
             const dbItem: DashboardItem | undefined = dbItems.find((i: DashboardItem) => i.title === item.title);
 
-            item.isNew = !dbItem || dbItem.isNew;
+            if (!dbItem) {
+                item.isNew = true;
+            } else {
+                item.id = dbItem.id;
+                item.isNew = dbItem.isNew;
+            }
         }
 
         // save the new live data into the db
