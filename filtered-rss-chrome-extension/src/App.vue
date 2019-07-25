@@ -11,6 +11,7 @@
   import { Component, Vue } from "vue-property-decorator";
   import Navbar from "@/components/Navbar.vue";
   import { feedRefreshTimer } from "@/ts/backround";
+  import { Notifications } from "@/ts/notifications";
 
   @Component({
     components: {
@@ -18,11 +19,12 @@
     }
   })
   export default class Home extends Vue {
-    mounted(): void {
+    public mounted(): void {
+      Notifications.initialize();
       feedRefreshTimer.restart();
     }
 
-    beforeDestroy(): void {
+    public beforeDestroy(): void {
       feedRefreshTimer.stop();
     }
   }

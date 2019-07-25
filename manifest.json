@@ -10,7 +10,7 @@
         "default_title": "Your filtered RSS feeds"
     },
     "permissions": [
-        "activeTab",
-        "storage"
+        "storage",
+        "notifications"
     ]
 }

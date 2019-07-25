@@ -1,4 +1,5 @@
 import { FilterTarget, FilterAction } from "./filters";
+import { generateGuid } from "./utils";
 
 // types used for parsing RSS feed data
 export class FeedItem {
@@ -42,20 +43,14 @@ export class FeedSettings {
 
 // view models
 export class DashboardItem {
+    public id: string;
     public title!: string;
     public link!: string;
     public date!: string;
     public feedName!: string;
     public isNew: boolean = false;
-}
 
-// helper functions
-function generateGuid(): string {
-    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c: string) => {
-        // tslint:disable-next-line:no-bitwise
-        const r: number = (Math.random() * 16) | 0;
-        // tslint:disable-next-line:no-bitwise
-        const v: number = c === "x" ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-    });
+    constructor() {
+        this.id = generateGuid();
+    }
 }

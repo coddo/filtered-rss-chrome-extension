@@ -36,6 +36,19 @@ class DashboardDatabase {
 
         localStorage.setItem(KEY_DASHBOARD_ITEMS, JSON.stringify(dashboardItems));
     }
+
+    public markAsNotNew(id: string): void {
+        const items: DashboardItem[] = this.get();
+
+        for (const item of items) {
+            if (item.id === id) {
+                item.isNew = false;
+                break;
+            }
+        }
+
+        this.set(items);
+    }
 }
 
 // data access layer singleton variable that is used everywhere
