@@ -1,24 +1,26 @@
-import { Feed, DashboardItem } from "./types";
+import { Feed, DashboardItem, FeedItem, FeedItemFilter } from "./types";
+import { getFilterTargetValue, getFilterFunction } from "./filters";
 
 export function convertFeedsToDashboardItems(feeds: Feed[]): DashboardItem[] {
     const dashboardItems: DashboardItem[] = [];
 
-    feeds.forEach(feed => {
+    feeds.forEach((feed) => {
         if (!feed.channel || !feed.channel.items || feed.channel.items.length === 0) {
             return;
         }
 
-        feed.channel.items.forEach(item => {
+        feed.channel.items.forEach((item) => {
             let isAcceptable: boolean = true;
 
             if (feed.settings.filters && feed.settings.filters.length > 0) {
                 isAcceptable = false;
 
-                feed.settings.filters.forEach(filter => {
-                    if (filter(item)) {
+                for (const filter of feed.settings.filters) {
+                    if (isFeedItemValid(item, filter)) {
                         isAcceptable = true;
+                        break;
                     }
-                });
+                }
             }
 
             if (isAcceptable) {
@@ -33,8 +35,12 @@ export function convertFeedsToDashboardItems(feeds: Feed[]): DashboardItem[] {
         });
     });
 
-    const sortedItems: DashboardItem[] = dashboardItems.sort((a, b) => (a.date < b.date) ? 1 : -1);
-    console.log(feeds);
+    return dashboardItems.sort((a, b) => (a.date < b.date ? 1 : -1));
+}
 
-    return sortedItems;
+function isFeedItemValid(item: FeedItem, filter: FeedItemFilter): boolean {
+    const filterTarget: string = getFilterTargetValue(filter.target, item);
+    const filterFunction: (target: string, filterValue: string) => boolean = getFilterFunction(filter.action);
+
+    return filterFunction(filterTarget, filter.value);
 }

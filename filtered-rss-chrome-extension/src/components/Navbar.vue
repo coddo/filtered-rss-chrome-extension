@@ -1,7 +1,18 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand text-white">Your filtered RSS feeds</a>
-    <button class="btn btn-outline-success ml-auto" type="button">+</button>
+    <router-link to="/" class="navbar-brand text-white">Filtered RSS</router-link>
+
+    <div class="ml-auto">
+      <router-link to="/settings">
+        <img class="mr-2" src="@/static/settings.png" alt="settings" title="Manage settings" />
+      </router-link>
+      <router-link to="/feeds">
+        <img class="mr-2" src="@/static/rss.png" alt="manage rss" title="Manage RSS feeds" />
+      </router-link>
+      <router-link to="/feeds/add">
+        <img class="p-1" src="@/static/add.png" alt="add rss" title="Add RSS feed" />
+      </router-link>
+    </div>
   </nav>
 </template>
 
@@ -16,5 +27,15 @@
 </script>
 
 <style lang="scss" scoped>
+  #btn-add-feed {
+    border-radius: 50%;
+    font-size: 14px;
+  }
+
+  img {
+    width: 36px !important;
+    height: 36px !important;
+    cursor: pointer;
+  }
 </style>
 

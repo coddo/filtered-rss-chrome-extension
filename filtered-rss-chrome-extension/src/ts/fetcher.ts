@@ -1,42 +1,53 @@
 import { FeedSettings, Feed, FeedChannel, FeedItem } from "./types";
-import * as xmlFeedFileContent from "raw-loader!../static/feed.xml";
+
+const CorsBackend: string = "https://cors-anywhere.herokuapp.com";
 
 export async function fetchFeedsAsync(configuredFeeds: FeedSettings[]): Promise<Feed[]> {
     const feeds: Feed[] = [];
 
-    configuredFeeds.forEach(async configuredFeed => {
-        const response: Response = await fetch(configuredFeed.url);
+    for (const configuredFeed of configuredFeeds) {
+        const feed: Feed | null = await fetchFeedDataAsync(configuredFeed);
 
-        if (!response || response.status !== 200 || !response.body) {
-            return;
+        if (feed !== null) {
+            feeds.push(feed);
         }
-
-        var documentResponse: any = await response.text();
-        console.log(documentResponse);
-
-        feeds.push(parseFeed(documentResponse, configuredFeed));
-    });
+    }
 
     return feeds;
 }
 
+export async function fetchFeedDataAsync(configuredFeed: FeedSettings): Promise<Feed | null> {
+    const response: Response = await fetch(`${CorsBackend}/${configuredFeed.url}`);
+
+    if (!response || response.status !== 200 || !response.body) {
+        return null;
+    }
+
+    const documentResponse: any = await response.text();
+
+    return parseFeed(documentResponse, configuredFeed);
+}
+
 function parseFeed(data: string, configuredFeed: FeedSettings): Feed {
-    const feed: Feed = <Feed>{
-        settings: configuredFeed,
-        channel: <FeedChannel>{
+    const feed: Feed = {
+        channel: {
+            description: "",
             items: [],
-            title: "",
             link: "",
-            description: ""
-        }
-    };
+            title: "",
+        } as FeedChannel,
+        settings: configuredFeed,
+    } as Feed;
 
     const parser: DOMParser = new DOMParser();
-    var xmlDocument: Document = parser.parseFromString(data, "application/xml");
+    const xmlDocument: Document = parser.parseFromString(data, "application/xml");
 
-    const xmlFeedItems: NodeListOf<ChildNode> = xmlDocument.firstChild!.firstChild!.childNodes;
+    const channelNodes: HTMLCollectionOf<Element> = xmlDocument.getElementsByTagName("channel");
+    if (!channelNodes || channelNodes.length !== 1) {
+        return feed;
+    }
 
-    xmlFeedItems.forEach(xmlFeedItem => {
+    channelNodes[0].childNodes.forEach((xmlFeedItem) => {
         switch (xmlFeedItem.nodeName) {
             case "title": {
                 feed.channel.title = xmlFeedItem.textContent!;
@@ -63,7 +74,7 @@ function parseFeed(data: string, configuredFeed: FeedSettings): Feed {
 function parseFeedItem(node: ChildNode): FeedItem {
     const feedItem: FeedItem = new FeedItem();
 
-    node.childNodes.forEach(childNode => {
+    node.childNodes.forEach((childNode) => {
         switch (childNode.nodeName) {
             case "title": {
                 feedItem.title = childNode.textContent!;
@@ -89,13 +100,4 @@ function parseFeedItem(node: ChildNode): FeedItem {
     });
 
     return feedItem;
-}
-
-export function getLocalMockFeeds(): Feed[] {
-    const feeds: Feed[] = [];
-    feeds.push((parseFeed(xmlFeedFileContent.default, <FeedSettings>{
-        name: "My first feed",
-    })));
-
-    return feeds;
 }
