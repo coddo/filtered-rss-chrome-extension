@@ -4,7 +4,7 @@
       class="card"
       v-for="item in items"
       v-bind:key="item.feedName + item.title"
-      @click="openLink(item)"
+      @click="openItem(item)"
     >
       <div class="card-body mr-auto d-inline-flex p-0">
         <div class="notification-sidebar" :class="item.isNew ? 'bg-success' : ''"></div>
