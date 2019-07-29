@@ -16,12 +16,13 @@ export abstract class Database<T> {
         return this.store.data;
     }
 
-    public set data(items: T) {
-        if (!items) {
+    public set data(data: T) {
+        if (!data) {
             return;
         }
 
-        localStorage.setItem(this.storageKey, JSON.stringify(items));
+        localStorage.setItem(this.storageKey, JSON.stringify(data));
+        this.store.data = data;
     }
 
     public initialize(): void {
