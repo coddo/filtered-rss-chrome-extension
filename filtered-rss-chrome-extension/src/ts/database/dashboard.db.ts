@@ -8,7 +8,7 @@ class DashboardDatabase extends Database<DashboardItem[]> {
     }
 
     public markAsNotNew(id: string): void {
-        const items: DashboardItem[] = this.store.data;
+        const items: DashboardItem[] = this.data;
 
         for (const item of items) {
             if (item.id === id) {
@@ -22,7 +22,7 @@ class DashboardDatabase extends Database<DashboardItem[]> {
     }
 
     public markAsNotified(ids: string[]): void {
-        const items: DashboardItem[] = this.store.data;
+        const items: DashboardItem[] = this.data;
 
         for (const id of ids) {
             for (const item of items) {

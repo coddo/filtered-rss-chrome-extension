@@ -1,5 +1,5 @@
 import { DashboardItem } from "./types";
-import { UserSettings, userSettingsDatabase } from "./database/user.db";
+import { UserSettings, userSettingsDatabase } from "./database/user-settings.db";
 
 export class Notifications {
     public static notifyNewItems(items: DashboardItem[],
@@ -9,7 +9,7 @@ export class Notifications {
             return [];
         }
 
-        const userSettings: UserSettings = userSettingsDatabase.get();
+        const userSettings: UserSettings = userSettingsDatabase.data;
 
         // check user settings permissions
         if (!userSettings.notificationPopup) {

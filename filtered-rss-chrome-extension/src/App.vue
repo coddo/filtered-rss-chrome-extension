@@ -14,6 +14,7 @@
   import { Notifications } from "@/ts/notifications";
   import { coreService } from "./ts/core";
   import { dashboardDatabase } from "./ts/database/dashboard.db";
+  import { userSettingsDatabase } from "./ts/database/user-settings.db";
 
   @Component({
     components: {
@@ -22,6 +23,7 @@
   })
   export default class Home extends Vue {
     public created(): void {
+      userSettingsDatabase.initialize();
       dashboardDatabase.initialize();
 
       feedRefreshTimer.restart();
@@ -35,6 +37,7 @@
       feedRefreshTimer.stop();
 
       dashboardDatabase.dispose();
+      userSettingsDatabase.dispose();
     }
   }
 </script>

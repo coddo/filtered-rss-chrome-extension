@@ -1,4 +1,4 @@
-import { userSettingsDatabase, UserSettings } from "./database/user.db";
+import { userSettingsDatabase, UserSettings } from "./database/user-settings.db";
 import { coreService } from "./core";
 
 class FeedRefreshTimer {
@@ -9,7 +9,7 @@ class FeedRefreshTimer {
             this.stop();
         }
 
-        const userSettings: UserSettings = userSettingsDatabase.get();
+        const userSettings: UserSettings = userSettingsDatabase.data;
         this.timerHandle = setTimeout(this.timerHandler.bind(this), userSettings.refreshIntervalMinutes * 60000);
     }
 
