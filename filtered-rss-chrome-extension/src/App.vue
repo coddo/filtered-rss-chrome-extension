@@ -12,21 +12,29 @@
   import Navbar from "@/components/Navbar.vue";
   import { feedRefreshTimer } from "@/ts/backround";
   import { Notifications } from "@/ts/notifications";
-  import { dashboardService } from './ts/core';
+  import { coreService } from "./ts/core";
+  import { dashboardDatabase } from "./ts/database/dashboard.db";
 
   @Component({
     components: {
-      Navbar
-    }
+      Navbar,
+    },
   })
   export default class Home extends Vue {
+    public created(): void {
+      dashboardDatabase.initialize();
+
+      feedRefreshTimer.restart();
+    }
+
     public mounted(): void {
       Notifications.initialize();
-      feedRefreshTimer.restart();
     }
 
     public beforeDestroy(): void {
       feedRefreshTimer.stop();
+
+      dashboardDatabase.dispose();
     }
   }
 </script>

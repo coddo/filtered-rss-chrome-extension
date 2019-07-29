@@ -5,10 +5,10 @@ import { feedsDatabase } from "./database/feeds.db";
 import { convertFeedsToDashboardItems } from "./converters";
 import { Notifications } from "./notifications";
 
-class DashboardService {
+class CoreService {
     public async refreshDashboardCache(): Promise<DashboardItem[]> {
         // retrieve both data sets
-        let dbItems: DashboardItem[] = dashboardDatabase.get();
+        let dbItems: DashboardItem[] = dashboardDatabase.data;
         let items: DashboardItem[] = await this.getLiveDataAsync();
 
         // normalize the data asets
@@ -34,10 +34,14 @@ class DashboardService {
         }
 
         // save the new live data into the db
-        dashboardDatabase.set(items);
+        dashboardDatabase.data = items;
 
         // notify the user about all the new items
-        Notifications.notifyNewItems(items);
+        const notifiedItems = Notifications.notifyNewItems(items, this.notificationClickedCallback);
+        if (notifiedItems.length > 0) {
+            // mark the new notifications as notified to user
+            dashboardDatabase.markAsNotified(notifiedItems.map((item: DashboardItem) => item.id));
+        }
 
         // return the data
         return items;
@@ -49,6 +53,11 @@ class DashboardService {
 
         return convertFeedsToDashboardItems(liveFeeds);
     }
+
+    private notificationClickedCallback(event: Event): void {
+        event.preventDefault();
+        dashboardDatabase.markAsNotNew((event.target as Notification).tag);
+    }
 }
 
-export const dashboardService: DashboardService = new DashboardService();
+export const coreService: CoreService = new CoreService();

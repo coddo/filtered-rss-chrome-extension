@@ -1,18 +1,50 @@
 import { DashboardItem } from "../types";
-
-// storage keys
-const KEY_DASHBOARD_ITEMS: string = "dashboard-items";
+import { Database } from "./database";
 
 // database class
-class DashboardDatabase {
-    public get(): DashboardItem[] {
-        const dasboardItemsValue: string | null = localStorage.getItem(KEY_DASHBOARD_ITEMS);
+class DashboardDatabase extends Database<DashboardItem[]> {
+    public constructor() {
+        super("dashboard-items", new Array<DashboardItem>());
+    }
 
-        if (!dasboardItemsValue) {
-            return [];
+    public markAsNotNew(id: string): void {
+        const items: DashboardItem[] = this.store.data;
+
+        for (const item of items) {
+            if (item.id === id) {
+                item.isNew = false;
+                item.isNotified = true;
+                break;
+            }
         }
 
-        const dashboardItems: DashboardItem[] = [];
+        this.data = items;
+    }
+
+    public markAsNotified(ids: string[]): void {
+        const items: DashboardItem[] = this.store.data;
+
+        for (const id of ids) {
+            for (const item of items) {
+                if (item.id === id) {
+                    item.isNotified = true;
+                    break;
+                }
+            }
+        }
+
+        this.data = items;
+    }
+
+    protected refreshStore(): void {
+        // read data from the localstorage
+        const dasboardItemsValue: string | null = localStorage.getItem(this.storageKey);
+        if (!dasboardItemsValue) {
+            return;
+        }
+
+        // clear the data and reconstruct it based on the local storage value
+        this.store.data.length = 0;
 
         JSON.parse(dasboardItemsValue).forEach((dashboardItemValue: any) => {
             const dashboardItem: DashboardItem = new DashboardItem();
@@ -25,47 +57,8 @@ class DashboardDatabase {
             dashboardItem.isNew = dashboardItemValue.isNew;
             dashboardItem.isNotified = dashboardItemValue.isNotified;
 
-            dashboardItems.push(dashboardItem);
+            this.store.data.push(dashboardItem);
         });
-
-        return dashboardItems;
-    }
-
-    public set(dashboardItems: DashboardItem[]): void {
-        if (!dashboardItems) {
-            dashboardItems = [];
-        }
-
-        localStorage.setItem(KEY_DASHBOARD_ITEMS, JSON.stringify(dashboardItems));
-    }
-
-    public markAsNotNew(id: string): void {
-        const items: DashboardItem[] = this.get();
-
-        for (const item of items) {
-            if (item.id === id) {
-                item.isNew = false;
-                item.isNotified = true;
-                break;
-            }
-        }
-
-        this.set(items);
-    }
-
-    public markAsNotified(ids: string[]): void {
-        const items: DashboardItem[] = this.get();
-
-        for (const id of ids) {
-            for (const item of items) {
-                if (item.id === id) {
-                    item.isNotified = true;
-                    break;
-                }
-            }
-        }
-
-        this.set(items);
     }
 }
 

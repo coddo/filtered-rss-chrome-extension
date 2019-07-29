@@ -24,7 +24,7 @@
   import { feedsDatabase } from "@/ts/database/feeds.db";
   import FeedDetails from "./FeedDetails.vue";
   import FeedFilters from "./FeedFilters.vue";
-  import { dashboardService } from '../ts/core';
+  import { coreService } from '../ts/core';
 
   @Component({
     components: {
@@ -85,7 +85,7 @@
 
         this.$emit(this.EVENT_SAVE);
       } finally {
-        await dashboardService.refreshDashboardCache();
+        await coreService.refreshDashboardCache();
         this.isLoading = false;
       }
     }
@@ -99,7 +99,7 @@
 
         this.$router.push("/feeds");
       } finally {
-        await dashboardService.refreshDashboardCache();
+        await coreService.refreshDashboardCache();
       }
     }
 

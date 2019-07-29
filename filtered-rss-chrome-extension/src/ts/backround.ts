@@ -1,5 +1,5 @@
 import { userSettingsDatabase, UserSettings } from "./database/user.db";
-import { dashboardService } from "./core";
+import { coreService } from "./core";
 
 class FeedRefreshTimer {
     private timerHandle: number = 0;
@@ -20,7 +20,7 @@ class FeedRefreshTimer {
 
     private async timerHandler(): Promise<void> {
         try {
-            await dashboardService.refreshDashboardCache();
+            await coreService.refreshDashboardCache();
         } finally {
             this.restart();
         }

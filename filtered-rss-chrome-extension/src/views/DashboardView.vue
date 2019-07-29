@@ -29,10 +29,9 @@
   import { fetchFeedsAsync } from "@/ts/fetcher";
   import { feedsDatabase } from "@/ts/database/feeds.db";
   import NoFeedsMessage from "@/components/NoFeedsMessage.vue";
-  import NoNewItemsMessage from '@/components/NoNewItemsMessage.vue';
-  import LoadingDashboardPlaceholder from '@/components/LoadingDashboardPlaceholder.vue';
-  import { dashboardService } from "@/ts/core.ts";
-  import { dashboardDatabase } from '../ts/database/dashboard.db';
+  import NoNewItemsMessage from "@/components/NoNewItemsMessage.vue";
+  import LoadingDashboardPlaceholder from "@/components/LoadingDashboardPlaceholder.vue";
+  import { dashboardDatabase } from "@/ts/database/dashboard.db";
 
   @Component({
     components: {
@@ -49,7 +48,7 @@
     }
 
     private get items(): DashboardItem[] {
-      return dashboardDatabase.get();
+      return dashboardDatabase.data;
     }
 
     public openItem(item: DashboardItem): void {
