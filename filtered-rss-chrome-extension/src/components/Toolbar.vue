@@ -8,8 +8,9 @@
     >Refresh</button>
     <button
       id="btn-open-all"
-      class="btn btn-outline-success ml-1"
+      class="btn btn-outline-success ml-2"
       title="Open all the new items"
+      v-if="newCount > 0"
       @click="openAllNewItems()"
     >Open all new</button>
 
