@@ -44,7 +44,7 @@
     private isLoading: boolean = false;
 
     private get feeds(): FeedSettings[] {
-      return feedsDatabase.getAll();
+      return feedsDatabase.data;
     }
 
     private get items(): DashboardItem[] {

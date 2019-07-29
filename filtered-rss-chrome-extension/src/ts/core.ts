@@ -48,8 +48,7 @@ class CoreService {
     }
 
     private async getLiveDataAsync(): Promise<DashboardItem[]> {
-        const configuredFeeds: FeedSettings[] = feedsDatabase.getAll();
-        const liveFeeds: Feed[] = await fetchFeedsAsync(configuredFeeds);
+        const liveFeeds: Feed[] = await fetchFeedsAsync(feedsDatabase.data);
 
         return convertFeedsToDashboardItems(liveFeeds);
     }

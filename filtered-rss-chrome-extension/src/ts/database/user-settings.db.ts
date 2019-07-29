@@ -6,7 +6,7 @@ class UserSettingsDatabase extends Database<UserSettings> {
         super("user-settings", {} as UserSettings);
     }
 
-    public refreshStore(): void {
+    protected refreshStore(): void {
         const settingsValue: string | null = localStorage.getItem(this.storageKey);
 
         if (settingsValue !== null) {

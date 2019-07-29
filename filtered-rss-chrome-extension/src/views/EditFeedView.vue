@@ -23,24 +23,24 @@
   })
   export default class EditFeedView extends Vue {
     private errorMessageTimeoutHandle: number = 0;
-
     private error: string | null = null;
-    private feed!: FeedSettings | null;
 
     @Prop(String)
     public feedId!: string;
 
     constructor() {
       super();
-
-      this.feed = feedsDatabase.get(this.feedId);
     }
 
-    mounted(): void {
+    public mounted(): void {
       if (!this.feed) {
         this.$router.push("/feeds");
         return;
       }
+    }
+
+    public get feed(): FeedSettings | null {
+      return feedsDatabase.get(this.feedId);
     }
 
     public editFeed(): void {
@@ -69,4 +69,3 @@
 
 <style lang="scss" scoped>
 </style>
-
