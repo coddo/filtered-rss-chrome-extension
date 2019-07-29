@@ -6,7 +6,6 @@ export abstract class Database<T> {
 
     public constructor(storageKey: string, initialData: T) {
         this.storageKey = storageKey;
-
         this.store = Vue.observable({
             data: initialData,
         });

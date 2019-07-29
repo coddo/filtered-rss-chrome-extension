@@ -10,9 +10,9 @@ class UserSettingsDatabase extends Database<UserSettings> {
         const settingsValue: string | null = localStorage.getItem(this.storageKey);
         const settingsJson: any = settingsValue ? JSON.parse(settingsValue) : new UserSettings();
 
-        this.data.notificationPopup = settingsJson.notificationPopup;
-        this.data.notificationSound = settingsJson.notificationSound;
-        this.data.refreshIntervalMinutes = settingsJson.refreshIntervalMinutes;
+        this.store.data.notificationPopup = settingsJson.notificationPopup;
+        this.store.data.notificationSound = settingsJson.notificationSound;
+        this.store.data.refreshIntervalMinutes = settingsJson.refreshIntervalMinutes;
     }
 }
 

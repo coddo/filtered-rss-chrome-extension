@@ -15,12 +15,12 @@
       </div>
     </div>
 
-    <div class="input-group mt-3">
+    <div class="input-group mt-3" v-if="userSettings.notificationPopup">
       <input
         type="text"
         class="form-control"
         aria-label="Text input with checkbox"
-        value="Notification popup"
+        value="Notification sound"
         disabled
       />
       <div class="input-group-append">
@@ -69,8 +69,18 @@
       return userSettingsDatabase.data;
     }
 
+    public get showSoundOption(): boolean {
+      return userSettingsDatabase.data.notificationPopup;
+    }
+
     public saveChanges(): void {
-      userSettingsDatabase.data = this.userSettings;
+      const userSettings: UserSettings = this.userSettings;
+
+      userSettingsDatabase.data = {
+        notificationPopup: userSettings.notificationPopup,
+        notificationSound: userSettings.notificationSound,
+        refreshIntervalMinutes: userSettings.refreshIntervalMinutes,
+      } as UserSettings;
     }
   }
 </script>
