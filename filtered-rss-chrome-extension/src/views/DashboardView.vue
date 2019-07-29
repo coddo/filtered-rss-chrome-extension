@@ -1,5 +1,7 @@
 <template>
-  <div id="feeds-list" v-if="items && items.length > 0">
+  <loading-dashboard-placeholder v-if="isLoading"></loading-dashboard-placeholder>
+
+  <div id="feeds-list" v-else-if="items && items.length > 0">
     <div
       class="card"
       v-for="item in items"
@@ -18,7 +20,6 @@
     </div>
   </div>
 
-  <loading-dashboard-placeholder v-else-if="isLoading"></loading-dashboard-placeholder>
   <no-feeds-message v-else-if="!feeds || feeds.length === 0"></no-feeds-message>
   <no-new-items-message v-else></no-new-items-message>
 </template>
@@ -43,7 +44,9 @@
     }
   })
   export default class DashboardView extends Vue {
-    private isLoading: boolean = false;
+    public get isLoading(): boolean {
+      return coreService.isDataLoading;
+    }
 
     public get feeds(): FeedSettings[] {
       return feedsDatabase.data;
