@@ -47,15 +47,26 @@ class CoreService {
         return items;
     }
 
+    public openItem(item: DashboardItem): void {
+        dashboardDatabase.markAsNotNew(item.id);
+        window.open(item.link);
+    }
+
     private async getLiveDataAsync(): Promise<DashboardItem[]> {
         const liveFeeds: Feed[] = await fetchFeedsAsync(feedsDatabase.data);
 
         return convertFeedsToDashboardItems(liveFeeds);
     }
 
-    private notificationClickedCallback(event: Event): void {
+    private notificationClickedCallback = (event: Event): void => {
         event.preventDefault();
-        dashboardDatabase.markAsNotNew((event.target as Notification).tag);
+        const item: DashboardItem | undefined = dashboardDatabase.get((event.target as Notification).tag);
+
+        if (!item) {
+            return;
+        }
+
+        this.openItem(item);
     }
 }
 

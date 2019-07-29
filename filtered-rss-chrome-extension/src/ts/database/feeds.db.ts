@@ -84,11 +84,12 @@ class FeedsDatabase extends Database<FeedSettings[]> {
         const feedsValue: string | null = localStorage.getItem(this.storageKey);
 
         if (!feedsValue) {
+            this.store.data = [];
             return;
         }
 
         // clear the data and reconstruct it based on the local storage value
-        this.store.data.length = 0;
+        this.store.data = [];
 
         JSON.parse(feedsValue).forEach((feedValue: any) => {
             const feed: FeedSettings = new FeedSettings();

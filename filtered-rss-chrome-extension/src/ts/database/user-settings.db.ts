@@ -8,14 +8,11 @@ class UserSettingsDatabase extends Database<UserSettings> {
 
     protected refreshStore(): void {
         const settingsValue: string | null = localStorage.getItem(this.storageKey);
+        const settingsJson: any = settingsValue ? JSON.parse(settingsValue) : new UserSettings();
 
-        if (settingsValue !== null) {
-            const settingsJson: any = JSON.parse(settingsValue);
-
-            this.data.notificationPopup = settingsJson.notificationPopup;
-            this.data.notificationSound = settingsJson.notificationSound;
-            this.data.refreshIntervalMinutes = settingsJson.refreshIntervalMinutes;
-        }
+        this.data.notificationPopup = settingsJson.notificationPopup;
+        this.data.notificationSound = settingsJson.notificationSound;
+        this.data.refreshIntervalMinutes = settingsJson.refreshIntervalMinutes;
     }
 }
 

@@ -3,7 +3,8 @@
     <div
       class="card"
       v-for="item in items"
-      v-bind:key="item.feedName + item.title"
+      :key="item.feedName + item.title"
+      :title="item.link"
       @click="openItem(item)"
     >
       <div class="card-body mr-auto d-inline-flex p-0">
@@ -24,7 +25,7 @@
 
 <script lang="ts">
   import { Component, Vue } from "vue-property-decorator";
-  import { DashboardItem, FeedSettings } from "../ts/types";
+  import { DashboardItem, FeedSettings } from "@/ts/types";
   import { convertFeedsToDashboardItems } from "@/ts/converters";
   import { fetchFeedsAsync } from "@/ts/fetcher";
   import { feedsDatabase } from "@/ts/database/feeds.db";
@@ -32,6 +33,7 @@
   import NoNewItemsMessage from "@/components/NoNewItemsMessage.vue";
   import LoadingDashboardPlaceholder from "@/components/LoadingDashboardPlaceholder.vue";
   import { dashboardDatabase } from "@/ts/database/dashboard.db";
+  import { coreService } from "@/ts/core";
 
   @Component({
     components: {
@@ -43,23 +45,23 @@
   export default class DashboardView extends Vue {
     private isLoading: boolean = false;
 
-    private get feeds(): FeedSettings[] {
+    public get feeds(): FeedSettings[] {
       return feedsDatabase.data;
     }
 
-    private get items(): DashboardItem[] {
+    public get items(): DashboardItem[] {
       return dashboardDatabase.data;
     }
 
     public openItem(item: DashboardItem): void {
-      dashboardDatabase.markAsNotNew(item.id);
-      window.open(item.link);
+      coreService.openItem(item);
     }
   }
 </script>
 
 <style lang="scss" scoped>
   .card {
+    border-radius: 0;
     cursor: pointer;
 
     .card-body {

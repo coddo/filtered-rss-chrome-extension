@@ -23,7 +23,7 @@ export class Notifications {
         return itemsToNotify;
     }
 
-    public static initialize(): void {
+    public static requestPermission(): void {
         if (Notification.permission === "default") {
             Notification.requestPermission();
         }
