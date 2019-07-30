@@ -1,0 +1,21 @@
+service: aws-lambda-proxy
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+
+plugins:
+  - serverless-webpack
+
+functions:
+  proxyRequest: # Create a news function which gets triggered by a http event
+    handler: handler.proxyRequest
+    events:
+      - http:
+          path: /
+          method: get
+
+custom: # Add custom section and include webpack configuration
+    webpack:
+      webpackConfig: 'webpack.config.js'
+      includeModules: false
