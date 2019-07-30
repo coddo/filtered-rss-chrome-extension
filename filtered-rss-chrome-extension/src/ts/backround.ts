@@ -1,5 +1,5 @@
-import { userSettingsDatabase, UserSettings } from "./database/user.db";
-import { dashboardService } from "./core";
+import { userSettingsDatabase, UserSettings } from "./database/user-settings.db";
+import { coreService } from "./core";
 
 class FeedRefreshTimer {
     private timerHandle: number = 0;
@@ -9,7 +9,7 @@ class FeedRefreshTimer {
             this.stop();
         }
 
-        const userSettings: UserSettings = userSettingsDatabase.get();
+        const userSettings: UserSettings = userSettingsDatabase.data;
         this.timerHandle = setTimeout(this.timerHandler.bind(this), userSettings.refreshIntervalMinutes * 60000);
     }
 
@@ -20,7 +20,7 @@ class FeedRefreshTimer {
 
     private async timerHandler(): Promise<void> {
         try {
-            await dashboardService.refreshDashboardCache();
+            await coreService.refreshDashboardCache();
         } finally {
             this.restart();
         }

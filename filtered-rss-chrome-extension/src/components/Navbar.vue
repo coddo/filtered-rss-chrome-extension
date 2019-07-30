@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <router-link to="/" class="navbar-brand text-white">Filtered RSS</router-link>
+    <router-link to="/" class="navbar-brand text-white">Fi.RSS</router-link>
 
     <div class="ml-auto">
       <router-link to="/settings">

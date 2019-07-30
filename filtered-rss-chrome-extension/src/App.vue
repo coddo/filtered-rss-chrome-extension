@@ -1,6 +1,8 @@
 <template>
   <div id="app" class="bg-secondary">
     <navbar />
+    <toolbar v-if="displayToolbar" />
+
     <div id="main-content">
       <router-view />
     </div>
@@ -10,23 +12,36 @@
 <script lang="ts">
   import { Component, Vue } from "vue-property-decorator";
   import Navbar from "@/components/Navbar.vue";
+  import Toolbar from "@/components/Toolbar.vue";
   import { feedRefreshTimer } from "@/ts/backround";
   import { Notifications } from "@/ts/notifications";
-  import { dashboardService } from './ts/core';
+  import { initializeDatabase, disposeDatabase } from "@/ts/database/index";
 
   @Component({
     components: {
-      Navbar
-    }
+      Navbar,
+      Toolbar,
+    },
   })
   export default class Home extends Vue {
-    public mounted(): void {
-      Notifications.initialize();
+    public created(): void {
+      initializeDatabase();
+
       feedRefreshTimer.restart();
+    }
+
+    public mounted(): void {
+      Notifications.requestPermission();
     }
 
     public beforeDestroy(): void {
       feedRefreshTimer.stop();
+
+      disposeDatabase();
+    }
+
+    public get displayToolbar(): boolean {
+      return this.$route.name === "Dashboard";
     }
   }
 </script>

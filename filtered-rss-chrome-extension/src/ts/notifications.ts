@@ -1,36 +1,36 @@
 import { DashboardItem } from "./types";
-import { UserSettings, userSettingsDatabase } from "./database/user.db";
-import { dashboardDatabase } from "./database/dashboard.db";
+import { UserSettings, userSettingsDatabase } from "./database/user-settings.db";
 
 export class Notifications {
-    public static notifyNewItems(items: DashboardItem[]): void {
+    public static notifyNewItems(items: DashboardItem[],
+        notificationClickedCallback: (event: Event) => void): DashboardItem[] {
         // check API lelvel permissions
         if (Notification.permission !== "granted") {
-            return;
+            return [];
         }
 
-        const userSettings: UserSettings = userSettingsDatabase.get();
+        const userSettings: UserSettings = userSettingsDatabase.data;
 
         // check user settings permissions
         if (!userSettings.notificationPopup) {
-            return;
+            return [];
         }
 
         // create the notifications for all the new and unnotified items
-        const newItems: DashboardItem[] = items.filter((i: DashboardItem) => i.isNew && !i.isNotified);
-        Notifications.createNotifications(newItems, userSettings);
+        const itemsToNotify: DashboardItem[] = items.filter((i: DashboardItem) => i.isNew && !i.isNotified);
+        Notifications.createNotifications(itemsToNotify, userSettings, notificationClickedCallback);
 
-        // mark the new notifications as notified to user
-        dashboardDatabase.markAsNotified(newItems.map((item: DashboardItem) => item.id));
+        return itemsToNotify;
     }
 
-    public static initialize(): void {
+    public static requestPermission(): void {
         if (Notification.permission === "default") {
             Notification.requestPermission();
         }
     }
 
-    private static createNotifications(items: DashboardItem[], userSettings: UserSettings): void {
+    private static createNotifications(items: DashboardItem[], userSettings: UserSettings,
+        notificationClickedCallback: (event: Event) => void): void {
         // create specific notification if there is only one new item
         // create a generic notification for multiple items
         if (items.length === 1) {
@@ -43,6 +43,7 @@ export class Notifications {
                 new Date(item.date).getTime(),
                 userSettings.notificationSound,
                 true,
+                notificationClickedCallback,
             );
             return;
         } else if (items.length > 1) {
@@ -53,13 +54,13 @@ export class Notifications {
                 Date.now(),
                 userSettings.notificationSound,
                 false,
+                notificationClickedCallback,
             );
         }
     }
 
-    private static createNotification(id: string, title: string, feedName: string, time: number,
-        // tslint:disable-next-line: align
-        useSound: boolean, registerCallbacks: boolean): void {
+    private static createNotification(id: string, title: string, feedName: string, time: number, useSound: boolean,
+        registerCallbacks: boolean, notificationClickedCallback: (event: Event) => void): void {
         const config: NotificationOptions = {
             body: feedName,
             renotify: true,
@@ -78,12 +79,7 @@ export class Notifications {
         const notif: Notification = new Notification(title, config);
 
         if (registerCallbacks) {
-            notif.onclick = Notifications.notificationClicked;
+            notif.onclick = notificationClickedCallback;
         }
-    }
-
-    private static notificationClicked(event: Event): void {
-        event.preventDefault();
-        dashboardDatabase.markAsNotNew((event.target as Notification).tag);
     }
 }

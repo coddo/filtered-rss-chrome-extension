@@ -25,7 +25,7 @@
   })
   export default class ManageFeedsView extends Vue {
     public get feeds(): FeedSettings[] {
-      return feedsDatabase.getAll();
+      return feedsDatabase.data;
     }
 
     public editFeed(feedId: string): void {

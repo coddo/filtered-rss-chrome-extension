@@ -1,6 +1,6 @@
 import { FeedSettings, Feed, FeedChannel, FeedItem } from "./types";
 
-const CorsBackend: string = "https://cors-anywhere.herokuapp.com";
+const CorsBackend: string = "https://vzir4xjww6.execute-api.eu-west-1.amazonaws.com/live/Fi-RSS-Reverse-Proxy";
 
 export async function fetchFeedsAsync(configuredFeeds: FeedSettings[]): Promise<Feed[]> {
     const feeds: Feed[] = [];
@@ -17,7 +17,7 @@ export async function fetchFeedsAsync(configuredFeeds: FeedSettings[]): Promise<
 }
 
 export async function fetchFeedDataAsync(configuredFeed: FeedSettings): Promise<Feed | null> {
-    const response: Response = await fetch(`${CorsBackend}/${configuredFeed.url}`);
+    const response: Response = await fetch(`${CorsBackend}?feed=${configuredFeed.url}`);
 
     if (!response || response.status !== 200 || !response.body) {
         return null;

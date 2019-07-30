@@ -4,51 +4,85 @@ import { fetchFeedsAsync } from "./fetcher";
 import { feedsDatabase } from "./database/feeds.db";
 import { convertFeedsToDashboardItems } from "./converters";
 import { Notifications } from "./notifications";
+import Vue from 'vue';
 
-class DashboardService {
+class CoreService {
+    private readonly serviceState = Vue.observable({
+        isDataLoading: false,
+    });
+
+    public get isDataLoading(): boolean {
+        return this.serviceState.isDataLoading;
+    }
+
     public async refreshDashboardCache(): Promise<DashboardItem[]> {
-        // retrieve both data sets
-        let dbItems: DashboardItem[] = dashboardDatabase.get();
-        let items: DashboardItem[] = await this.getLiveDataAsync();
+        try {
+            this.serviceState.isDataLoading = true;
 
-        // normalize the data asets
-        if (!dbItems) {
-            dbItems = [];
-        }
+            // retrieve both data sets
+            let dbItems: DashboardItem[] = dashboardDatabase.data;
+            let items: DashboardItem[] = await this.getLiveDataAsync();
 
-        if (!items) {
-            items = [];
-        }
-
-        // Mark live items that are not found in the db as new
-        for (const item of items) {
-            const dbItem: DashboardItem | undefined = dbItems.find((i: DashboardItem) => i.title === item.title);
-
-            if (!dbItem) {
-                item.isNew = true;
-            } else {
-                item.id = dbItem.id;
-                item.isNew = dbItem.isNew;
-                item.isNotified = dbItem.isNotified;
+            // normalize the data asets
+            if (!dbItems) {
+                dbItems = [];
             }
+
+            if (!items) {
+                items = [];
+            }
+
+            // Mark live items that are not found in the db as new
+            for (const item of items) {
+                const dbItem: DashboardItem | undefined = dbItems.find((i: DashboardItem) => i.title === item.title);
+
+                if (!dbItem) {
+                    item.isNew = true;
+                } else {
+                    item.id = dbItem.id;
+                    item.isNew = dbItem.isNew;
+                    item.isNotified = dbItem.isNotified;
+                }
+            }
+
+            // save the new live data into the db
+            dashboardDatabase.data = items;
+
+            // notify the user about all the new items
+            const notifiedItems = Notifications.notifyNewItems(items, this.notificationClickedCallback);
+            if (notifiedItems.length > 0) {
+                // mark the new notifications as notified to user
+                dashboardDatabase.markAsNotified(notifiedItems.map((item: DashboardItem) => item.id));
+            }
+
+            // return the data
+            return items;
+        } finally {
+            this.serviceState.isDataLoading = false;
         }
+    }
 
-        // save the new live data into the db
-        dashboardDatabase.set(items);
-
-        // notify the user about all the new items
-        Notifications.notifyNewItems(items);
-
-        // return the data
-        return items;
+    public openItem(item: DashboardItem): void {
+        dashboardDatabase.markAsNotNew(item.id);
+        window.open(item.link);
     }
 
     private async getLiveDataAsync(): Promise<DashboardItem[]> {
-        const configuredFeeds: FeedSettings[] = feedsDatabase.getAll();
-        const liveFeeds: Feed[] = await fetchFeedsAsync(configuredFeeds);
+        const liveFeeds: Feed[] = await fetchFeedsAsync(feedsDatabase.data);
 
         return convertFeedsToDashboardItems(liveFeeds);
     }
+
+    private notificationClickedCallback = (event: Event): void => {
+        event.preventDefault();
+        const item: DashboardItem | undefined = dashboardDatabase.get((event.target as Notification).tag);
+
+        if (!item) {
+            return;
+        }
+
+        this.openItem(item);
+    }
 }
 
-export const dashboardService: DashboardService = new DashboardService();
+export const coreService: CoreService = new CoreService();
