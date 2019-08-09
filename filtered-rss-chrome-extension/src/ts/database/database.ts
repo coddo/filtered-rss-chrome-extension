@@ -29,6 +29,11 @@ export abstract class Database<T> {
         this.refreshStore();
     }
 
+    public set rawData(rawData: any) {
+        localStorage.setItem(this.storageKey, JSON.stringify(rawData));
+        this.refreshStore();
+    }
+
     public dispose(): void {
         window.removeEventListener("storage", this.onStoredDataChanged);
     }
