@@ -4,11 +4,11 @@ import { fetchFeedsAsync } from "./fetcher";
 import { feedsDatabase } from "./database/feeds.db";
 import { convertFeedsToDashboardItems } from "./converters";
 import { Notifications } from "./notifications";
-import Vue from 'vue';
+import Vue from "vue";
 
 class CoreService {
     private readonly serviceState = Vue.observable({
-        isDataLoading: false,
+        isDataLoading: false
     });
 
     public get isDataLoading(): boolean {
@@ -32,7 +32,7 @@ class CoreService {
                 items = [];
             }
 
-            // Mark live items that are not found in the db as new
+            // mark live items that are not found in the db as new
             for (const item of items) {
                 const dbItem: DashboardItem | undefined = dbItems.find((i: DashboardItem) => i.title === item.title);
 
@@ -49,7 +49,10 @@ class CoreService {
             dashboardDatabase.data = items;
 
             // notify the user about all the new items
-            const notifiedItems = Notifications.notifyNewItems(items, this.notificationClickedCallback);
+            const notifiedItems: DashboardItem[] = Notifications.notifyNewItems(
+                items,
+                this.notificationClickedCallback
+            );
             if (notifiedItems.length > 0) {
                 // mark the new notifications as notified to user
                 dashboardDatabase.markAsNotified(notifiedItems.map((item: DashboardItem) => item.id));
@@ -64,7 +67,15 @@ class CoreService {
 
     public openItem(item: DashboardItem): void {
         dashboardDatabase.markAsNotNew(item.id);
-        window.open(item.link);
+
+        try {
+            chrome.tabs.create({
+                url: item.link,
+                active: false
+            });
+        } catch {
+            window.open(item.link, "_blank");
+        }
     }
 
     private async getLiveDataAsync(): Promise<DashboardItem[]> {

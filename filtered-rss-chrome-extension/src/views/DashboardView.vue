@@ -6,15 +6,19 @@
       class="card"
       v-for="item in items"
       :key="item.feedName + item.title"
-      :title="item.link"
-      @click="openItem(item)"
     >
       <div class="card-body mr-auto d-inline-flex p-0">
-        <div class="notification-sidebar" :class="item.isNew ? 'bg-success' : ''"></div>
-        <div class="p-3">
+        <div class="notification-sidebar" :title="item.link" @click="openItem(item)" v-if="!item.isNew"></div>
+        <div class="notification-sidebar bg-success" title="Mark as seen" @click="markItemAsNotNew(item.id)" v-else></div>
+
+        <div class="p-3" :title="item.link" @click="openItem(item)">
           <h5 class="card-title">{{ item.title }}</h5>
           <h6 class="card-subtitle mb-2 text-muted">{{ item.date }}</h6>
-          <p class="card-text">{{ item.feedName }}</p>
+
+          <div class="d-flex">
+            <img class="feed-icon mr-2" :src="feedFaviconUrl(item.feedName)" alt="test" />
+            <p class="card-text">{{ item.feedName }}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -59,6 +63,19 @@
     public openItem(item: DashboardItem): void {
       coreService.openItem(item);
     }
+
+    public markItemAsNotNew(itemId: string): void {
+      dashboardDatabase.markAsNotNew(itemId);
+    }
+
+    public feedFaviconUrl(feedName: string): string {
+      const feed: FeedSettings | undefined = feedsDatabase.data.find((f: FeedSettings) => f.name === feedName);
+      if (!feed) {
+        return "";
+      }
+
+      return `https://www.google.com/s2/favicons?domain_url=${feed.linkHost}`;
+    }
   }
 </script>
 
@@ -69,8 +86,24 @@
 
     .card-body {
       .notification-sidebar {
+        width: 100%;
         min-width: 10px;
         max-width: 10px;
+
+        &.bg-success:hover {
+          transition: transform 0.3s ease-out;
+          transform: scaleX(3);
+        }
+
+        &.bg-success:not(hover) {
+          transition: transform 0.3s ease-out;
+          transform: scaleX(1);
+        }
+      }
+
+      .feed-icon {
+        width: 16px;
+        height: 16px;
       }
     }
   }

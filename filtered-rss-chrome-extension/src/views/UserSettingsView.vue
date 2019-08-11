@@ -47,19 +47,38 @@
         >{{ acceptedValue }}</option>
       </select>
     </div>
+
+    <div class="mt-3 container-fluid bg-dark py-1 px-0 mx-0"></div>
+    <h4 class="text-white mt-3">Import and export settings and feeds</h4>
+
+    <div class="mt-3 d-flex">
+      <button class="btn btn-success ml-auto mr-2" @click="exportConfiguration()">Export</button>
+      <button class="btn btn-success mr-auto" @click="importConfiguration()">Import</button>
+    </div>
+
+    <div
+      class="alert alert-success mt-3"
+      v-if="showDialog === 1"
+    >Successfully imported settings and feeds!</div>
+    <div class="alert alert-danger mt-3" v-if="showDialog === 2">Error importing settings and feeds!</div>
   </div>
 </template>
 
 <script lang="ts">
   import { Component, Vue } from "vue-property-decorator";
   import { UserSettings, userSettingsDatabase } from "@/ts/database/user-settings.db";
+  import { configMigrationService } from "@/ts/config-migration";
+import { coreService } from '../ts/core';
 
   @Component({
     components: {
     }
   })
   export default class UserSettingsView extends Vue {
+    private timeoutHandle: number = 0;
+
     public readonly acceptedUpdateIntervals: number[] = [1, 2, 3, 5, 10, 15, 20, 25, 30, 40, 50, 60, 75, 90, 105, 120];
+    public showDialog: number = 0;
 
     constructor() {
       super();
@@ -81,6 +100,29 @@
         notificationSound: userSettings.notificationSound,
         refreshIntervalMinutes: userSettings.refreshIntervalMinutes,
       } as UserSettings;
+    }
+
+    public exportConfiguration(): void {
+      configMigrationService.exportSettingsAndFeeds();
+    }
+
+    public importConfiguration(): void {
+      configMigrationService.importSettingsAndFeeds(this.importConfigurationCallback);
+    }
+
+    public importConfigurationCallback(success: boolean): void {
+      this.showDialog = success ? 1 : 2;
+
+      this.timeoutHandle = setTimeout(() => {
+        this.showDialog = 0;
+
+        clearTimeout(this.timeoutHandle);
+        this.timeoutHandle = 0;
+      }, 5000);
+
+      if (success) {
+        coreService.refreshDashboardCache();
+      }
     }
   }
 </script>
