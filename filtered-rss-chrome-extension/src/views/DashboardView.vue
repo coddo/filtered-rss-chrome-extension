@@ -16,7 +16,7 @@
           <h6 class="card-subtitle mb-2 text-muted">{{ item.date }}</h6>
 
           <div class="d-flex">
-            <img class="feed-icon mr-2" :src="feedFaviconUrl(item.feedName)" alt="test" />
+            <img class="feed-icon mr-2" :src="feedFaviconUrl(item.feedName)" alt="favicon" />
             <p class="card-text">{{ item.feedName }}</p>
           </div>
         </div>
