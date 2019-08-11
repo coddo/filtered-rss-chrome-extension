@@ -21,9 +21,9 @@
     </div>
 
     <confirmation-modal
-      v-if="showDeleteConfirmation"
       title="Delete feed"
       confirmation-text="Are you sure that you want to delete this feed?"
+      :show="showDeleteConfirmation"
       @cancel="hideDeleteConfirmationDialog()"
       @ok="deleteFeed()"
     ></confirmation-modal>
