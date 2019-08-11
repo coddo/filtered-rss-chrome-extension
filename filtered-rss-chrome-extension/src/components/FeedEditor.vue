@@ -1,18 +1,32 @@
 <template>
   <div id="feed-editor">
-    <div class="alert alert-danger" role="alert" v-if="error || parentError">
-      <p class="text-center my-0">{{ error }} {{ parentError }}</p>
+    <div id="feed-editor-content" :disable="showDeleteConfirmation">
+      <div class="alert alert-danger" role="alert" v-if="error || parentError">
+        <p class="text-center my-0">{{ error }} {{ parentError }}</p>
+      </div>
+
+      <div id="toolbar" class="d-flex mt-3 mb-2 px-3 bg-secondary">
+        <button
+          class="btn btn-danger"
+          v-if="showDeleteButton"
+          @click="showDeleteConfirmationDialog()"
+        >Delete</button>
+        <button class="btn btn-secondary ml-auto" @click="cancel()">Cancel</button>
+        <button class="btn btn-success ml-2" @click="saveFeed()">Save</button>
+      </div>
+
+      <feed-details :feed="feed" :is-loading="isLoading" @save="saveFeed()"></feed-details>
+
+      <feed-filters :feed="feed" @save="saveFeed()"></feed-filters>
     </div>
 
-    <div id="toolbar" class="d-flex mt-3 mb-2 px-3 bg-secondary">
-      <button class="btn btn-danger" v-if="showDeleteButton" @click="deleteFeed()">Delete</button>
-      <button class="btn btn-secondary ml-auto" @click="cancel()">Cancel</button>
-      <button class="btn btn-success ml-2" @click="saveFeed()">Save</button>
-    </div>
-
-    <feed-details :feed="feed" :is-loading="isLoading" @save="saveFeed()"></feed-details>
-
-    <feed-filters :feed="feed" @save="saveFeed()"></feed-filters>
+    <confirmation-modal
+      v-if="showDeleteConfirmation"
+      title="Delete feed"
+      confirmation-text="Are you sure that you want to delete this feed?"
+      @cancel="hideDeleteConfirmationDialog()"
+      @ok="deleteFeed()"
+    ></confirmation-modal>
   </div>
 </template>
 
@@ -24,12 +38,14 @@
   import { feedsDatabase } from "@/ts/database/feeds.db";
   import FeedDetails from "./FeedDetails.vue";
   import FeedFilters from "./FeedFilters.vue";
-  import { coreService } from '../ts/core';
+  import { coreService } from "@/ts/core";
+  import ConfirmationModal from "./ConfirmationModal.vue";
 
   @Component({
     components: {
       FeedDetails,
       FeedFilters,
+      ConfirmationModal
     }
   })
   export default class FeedEditor extends Vue {
@@ -38,6 +54,7 @@
     private clearErrorTimeoutHandle: number = 0;
     private isLoading: boolean = false;
     private error: string | null = null;
+    private showDeleteConfirmation: boolean = false;
 
     @Prop(String)
     public parentError!: string | null;
@@ -101,6 +118,14 @@
       } finally {
         await coreService.refreshDashboardCache();
       }
+    }
+
+    public showDeleteConfirmationDialog(): void {
+      this.showDeleteConfirmation = true;
+    }
+
+    public hideDeleteConfirmationDialog(): void {
+      this.showDeleteConfirmation = false;
     }
 
     private async isDataValidAsync(): Promise<boolean> {
