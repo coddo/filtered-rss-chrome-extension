@@ -9,7 +9,7 @@
     >
       <div class="card-body mr-auto d-inline-flex p-0">
         <div class="notification-sidebar" :title="item.link" @click="openItem(item)" v-if="!item.isNew"></div>
-        <div class="notification-sidebar bg-success" title="Mark as seen" v-else></div>
+        <div class="notification-sidebar bg-success" title="Mark as seen" @click="markItemAsNotNew(item.id)" v-else></div>
 
         <div class="p-3" :title="item.link" @click="openItem(item)">
           <h5 class="card-title">{{ item.title }}</h5>
@@ -64,6 +64,10 @@
       coreService.openItem(item);
     }
 
+    public markItemAsNotNew(itemId: string): void {
+      dashboardDatabase.markAsNotNew(itemId);
+    }
+
     public feedFaviconUrl(feedName: string): string {
       const feed: FeedSettings | undefined = feedsDatabase.data.find((f: FeedSettings) => f.name === feedName);
       if (!feed) {
@@ -82,10 +86,18 @@
 
     .card-body {
       .notification-sidebar {
+        width: 100%;
         min-width: 10px;
         max-width: 10px;
 
-        &.bg-success {
+        &.bg-success:hover {
+          transition: transform 0.3s ease-out;
+          transform: scaleX(3);
+        }
+
+        &.bg-success:not(hover) {
+          transition: transform 0.3s ease-out;
+          transform: scaleX(1);
         }
       }
 
