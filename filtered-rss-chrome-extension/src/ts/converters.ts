@@ -35,7 +35,7 @@ export function convertFeedsToDashboardItems(feeds: Feed[]): DashboardItem[] {
         });
     });
 
-    return dashboardItems.sort((a, b) => (a.date < b.date ? 1 : -1));
+    return dashboardItems.sort((a, b) => (Date.parse(a.date) < Date.parse(b.date) ? 1 : -1));
 }
 
 function isFeedItemValid(item: FeedItem, filter: FeedItemFilter): boolean {
