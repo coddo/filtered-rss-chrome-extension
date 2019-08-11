@@ -39,6 +39,10 @@ export class FeedSettings {
     constructor() {
         this.id = generateGuid();
     }
+
+    public get linkHost(): string {
+        return new URL(this.url).host;
+    }
 }
 
 // view models
