@@ -1,45 +1,29 @@
 import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
-import { generateGuid } from "./ts/utils";
 import { Notifications } from "./ts/notifications";
+import { feedRefreshTimer } from "./ts/backround";
 
 Vue.config.productionTip = false;
 
-try {
-    // declare lifecycle hooks listener functions
-    function onInstalledListener(): void {}
+// declare lifecycle hooks listener functions
+function onInstalledListener(): void {
+    Notifications.requestPermission();
+    feedRefreshTimer.stop();
+    feedRefreshTimer.start();
+}
 
-    function onStartupListener(): void {}
-
-    function onSuspendListener(): void {
+function onSuspendListener(): void {
+    if (chrome.runtime.onInstalled.hasListener(onInstalledListener)) {
         chrome.runtime.onInstalled.removeListener(onInstalledListener);
-        chrome.runtime.onStartup.removeListener(onStartupListener);
-        chrome.runtime.onSuspend.removeListener(onSuspendListener);
     }
+}
 
+try {
     // register the lifecycle hooks
-    // chrome.runtime.onInstalled.addListener(onInstalledListener);
-    // chrome.runtime.onStartup.addListener(onStartupListener);
-    // chrome.runtime.onSuspend.addListener(onSuspendListener);
-
-    chrome.runtime.onInstalled.addListener(() => {
-        Notifications.createNotification(generateGuid(), "onInstalled", "", Date.now(), true);
-    });
-
-    chrome.runtime.onStartup.addListener(() => {
-        Notifications.createNotification(generateGuid(), "onStartup", "", Date.now(), true);
-    });
-
-    chrome.runtime.onSuspend.addListener(() => {
-        Notifications.createNotification(generateGuid(), "onSuspend", "", Date.now(), true);
-    });
-
-    chrome.runtime.onConnect.addListener(() => {
-        Notifications.createNotification(generateGuid(), "onConnect", "", Date.now(), true);
-    });
+    chrome.runtime.onInstalled.addListener(onInstalledListener);
+    chrome.runtime.onSuspend.addListener(onSuspendListener);
 } finally {
-    // create the Vue app
     new Vue({
         router,
         render: h => h(App)

@@ -11,7 +11,8 @@
     },
     "permissions": [
         "storage",
-        "notifications"
+        "notifications",
+        "alarms"
     ],
     "background": {
         "scripts": [#{scripts_list}],

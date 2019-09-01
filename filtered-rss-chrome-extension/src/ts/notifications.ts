@@ -2,12 +2,18 @@ import { DashboardItem } from "./types";
 import { UserSettings, userSettingsDatabase } from "./database/user-settings.db";
 
 export class Notifications {
-    public static createNotification(id: string, title: string, text: string, time: number, useSound: boolean,
+    public static createNotification(id: string, title: string, text: string, time: number,
         notificationClickedCallback?: (event: Event) => void): void {
+        // check that the user has enabled notifications
+        const userSettings: UserSettings = userSettingsDatabase.data;
+        if (!userSettings.notificationPopup) {
+            return;
+        }
+
         const config: NotificationOptions = {
             body: text,
             renotify: true,
-            silent: !useSound,
+            silent: !userSettings.notificationSound,
             tag: id,
             timestamp: time,
         } as NotificationOptions;
@@ -26,23 +32,15 @@ export class Notifications {
         }
     }
 
-    public static notifyNewItems(items: DashboardItem[],
-        notificationClickedCallback: (event: Event) => void): DashboardItem[] {
+    public static notifyNewItems(items: DashboardItem[], notificationClickedCallback: (event: Event) => void): DashboardItem[] {
         // check API lelvel permissions
         if (Notification.permission !== "granted") {
             return [];
         }
 
-        const userSettings: UserSettings = userSettingsDatabase.data;
-
-        // check user settings permissions
-        if (!userSettings.notificationPopup) {
-            return [];
-        }
-
         // create the notifications for all the new and unnotified items
         const itemsToNotify: DashboardItem[] = items.filter((i: DashboardItem) => i.isNew && !i.isNotified);
-        Notifications.createNotifications(itemsToNotify, userSettings, notificationClickedCallback);
+        Notifications.createNotifications(itemsToNotify, notificationClickedCallback);
 
         return itemsToNotify;
     }
@@ -53,8 +51,7 @@ export class Notifications {
         }
     }
 
-    private static createNotifications(items: DashboardItem[], userSettings: UserSettings,
-        notificationClickedCallback: (event: Event) => void): void {
+    private static createNotifications(items: DashboardItem[], notificationClickedCallback: (event: Event) => void): void {
         // create specific notification if there is only one new item
         // create a generic notification for multiple items
         if (items.length === 1) {
@@ -65,7 +62,6 @@ export class Notifications {
                 item.title,
                 item.feedName,
                 new Date(item.date).getTime(),
-                userSettings.notificationSound,
                 notificationClickedCallback,
             );
             return;
@@ -74,8 +70,7 @@ export class Notifications {
                 "no_id",
                 "New updates in your feeds",
                 "Multiple feeds",
-                Date.now(),
-                userSettings.notificationSound
+                Date.now()
             );
         }
     }

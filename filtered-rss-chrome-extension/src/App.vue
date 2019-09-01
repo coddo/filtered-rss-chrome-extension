@@ -14,8 +14,8 @@
   import Navbar from "@/components/Navbar.vue";
   import Toolbar from "@/components/Toolbar.vue";
   import { feedRefreshTimer } from "@/ts/backround";
-  import { Notifications } from "@/ts/notifications";
   import { initializeDatabase, disposeDatabase } from "@/ts/database/index";
+  import { coreService } from "./ts/core";
 
   @Component({
     components: {
@@ -24,20 +24,9 @@
     },
   })
   export default class Home extends Vue {
-    public created(): void {
+    public async beforeCreate(): Promise<void> {
       initializeDatabase();
-
-      feedRefreshTimer.restart();
-    }
-
-    public mounted(): void {
-      Notifications.requestPermission();
-    }
-
-    public beforeDestroy(): void {
-      feedRefreshTimer.stop();
-
-      disposeDatabase();
+      feedRefreshTimer.start();
     }
 
     public get displayToolbar(): boolean {
