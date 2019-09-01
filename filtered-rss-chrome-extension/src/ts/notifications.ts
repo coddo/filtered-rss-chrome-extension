@@ -2,6 +2,30 @@ import { DashboardItem } from "./types";
 import { UserSettings, userSettingsDatabase } from "./database/user-settings.db";
 
 export class Notifications {
+    public static createNotification(id: string, title: string, text: string, time: number, useSound: boolean,
+        notificationClickedCallback?: (event: Event) => void): void {
+        const config: NotificationOptions = {
+            body: text,
+            renotify: true,
+            silent: !useSound,
+            tag: id,
+            timestamp: time,
+        } as NotificationOptions;
+
+        try {
+            // configuration specific to the chrome API, which works only when deployed
+            config.icon = chrome.extension.getURL("favicon.png");
+        } catch {
+            config.icon = "favicon.png";
+        }
+
+        const notif: Notification = new Notification(title, config);
+
+        if (notificationClickedCallback) {
+            notif.onclick = notificationClickedCallback;
+        }
+    }
+
     public static notifyNewItems(items: DashboardItem[],
         notificationClickedCallback: (event: Event) => void): DashboardItem[] {
         // check API lelvel permissions
@@ -42,7 +66,6 @@ export class Notifications {
                 item.feedName,
                 new Date(item.date).getTime(),
                 userSettings.notificationSound,
-                true,
                 notificationClickedCallback,
             );
             return;
@@ -52,34 +75,8 @@ export class Notifications {
                 "New updates in your feeds",
                 "Multiple feeds",
                 Date.now(),
-                userSettings.notificationSound,
-                false,
-                notificationClickedCallback,
+                userSettings.notificationSound
             );
-        }
-    }
-
-    private static createNotification(id: string, title: string, feedName: string, time: number, useSound: boolean,
-        registerCallbacks: boolean, notificationClickedCallback: (event: Event) => void): void {
-        const config: NotificationOptions = {
-            body: feedName,
-            renotify: true,
-            silent: !useSound,
-            tag: id,
-            timestamp: time,
-        } as NotificationOptions;
-
-        try {
-            // configuration specific to the chrome API, which works only when deployed
-            config.icon = chrome.extension.getURL("favicon.png");
-        } catch {
-            // nothing to do here, we're on localhost
-        }
-
-        const notif: Notification = new Notification(title, config);
-
-        if (registerCallbacks) {
-            notif.onclick = notificationClickedCallback;
         }
     }
 }
