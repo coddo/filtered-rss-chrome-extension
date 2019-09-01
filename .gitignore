@@ -15,4 +15,7 @@
 .webpack
 .serverless
 
+# extension zip file
+fi-rss.zip
+
 # End of https://www.gitignore.io/api/visualstudiocode

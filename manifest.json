@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
-    "name": "Filtered RSS feed viewer",
     "version": "1.0",
+    "name": "Filtered RSS feed viewer",
     "description": "Filter your RSS feeds to only see what you care about",
 
     "browser_action": {
