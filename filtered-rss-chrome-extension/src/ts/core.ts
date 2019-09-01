@@ -5,7 +5,6 @@ import { fetchFeedsAsync } from "./fetcher";
 import { feedsDatabase } from "./database/feeds.db";
 import { convertFeedsToDashboardItems } from "./converters";
 import { Notifications } from "./notifications";
-import { generateGuid } from "./utils";
 
 class CoreService {
     private readonly serviceState = Vue.observable({
@@ -18,8 +17,6 @@ class CoreService {
 
     public async refreshDashboardCache(): Promise<DashboardItem[]> {
         try {
-            Notifications.createNotification(generateGuid(), "Refresh Dashboard", "", Date.now());
-
             this.serviceState.isDataLoading = true;
 
             // retrieve both data sets

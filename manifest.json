@@ -15,7 +15,7 @@
         "alarms"
     ],
     "background": {
-        "scripts": ["./js/app.c559ee2a.js", "./js/chunk-2d0cf361.2ab6815f.js", "./js/chunk-2d0db0cf.120434cd.js", "./js/chunk-2d0e5beb.28ced95c.js", "./js/chunk-48446c8c.d79b0690.js", "./js/chunk-65dae1f4.c33e0fb6.js", "./js/chunk-vendors.701ed73f.js"],
+        "scripts": ["./js/app.0947d833.js", "./js/chunk-2d0cf361.2ab6815f.js", "./js/chunk-2d0db0cf.120434cd.js", "./js/chunk-2d0e5beb.28ced95c.js", "./js/chunk-48446c8c.d79b0690.js", "./js/chunk-65dae1f4.c33e0fb6.js", "./js/chunk-vendors.701ed73f.js"],
         "persistent": false
     }
 }
