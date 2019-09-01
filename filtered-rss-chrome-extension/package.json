@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "(vue-cli-service build) && (cpx dist/**/* ../)",
+    "build": "(vue-cli-service build) && (@powershell -NoProfile -ExecutionPolicy Unrestricted -Command ../patch-config.ps1)",
+    "build-linux": "(vue-cli-service build) && (@powershell -NoProfile -ExecutionPolicy Unrestricted -Command ../patch-config.sh)",
     "lint": "vue-cli-service lint",
     "test:unit": "vue-cli-service test:unit"
   },
@@ -32,7 +33,6 @@
     "babel-eslint": "^10.0.3",
     "chai": "^4.2.0",
     "core-js": "^2.6.9",
-    "cpx": "^1.5.0",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.2.3",
     "node-sass": "^4.12.0",
