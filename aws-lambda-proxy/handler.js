@@ -6,7 +6,7 @@ module.exports.proxyRequest = async (event) => {
   const agwResponse = {
     statusCode: response.status,
     headers: {
-      "Access-Control-Allow-Origin": "*"
+      "Access-Control-Allow-Origin": "chrome-extension://iebjlmlcnpdkeladjfjjokagningffec"
     },
   };
 
