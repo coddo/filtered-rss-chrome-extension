@@ -1,4 +1,4 @@
 interface IBackgroundTimer {
-    start(): void;
+    start(instantExecute?: boolean): void;
     stop(): void;
 }

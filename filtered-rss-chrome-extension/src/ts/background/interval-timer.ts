@@ -4,7 +4,7 @@ import { coreService } from "../core";
 export class IntervalBackgroundTimer implements IBackgroundTimer {
     private timerHandle: number = 0;
 
-    public start(): void {
+    public start(instantExecute: boolean = true): void {
         if (this.timerHandle !== 0) {
             this.stop();
         }
@@ -14,6 +14,10 @@ export class IntervalBackgroundTimer implements IBackgroundTimer {
             async () => await this.handlerAsync(),
             userSettingsDatabase.data.refreshIntervalMinutes * 60000
         );
+
+        if (instantExecute) {
+            this.handlerAsync();
+        }
     }
 
     public stop(): void {

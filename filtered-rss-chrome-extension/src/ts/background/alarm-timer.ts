@@ -6,8 +6,8 @@ export class AlarmBackgroundTimer implements IBackgroundTimer {
 
     private executeEventListener!: (alarm: chrome.alarms.Alarm) => Promise<void>;
 
-    public start(): void {
-        chrome.alarms.get(this.alarmName, this.getAlarmHandler.bind(this));
+    public start(instantExecute: boolean = true): void {
+        chrome.alarms.get(this.alarmName, alarm => this.getAlarmHandler(alarm, instantExecute));
     }
 
     public stop(): void {
@@ -17,7 +17,7 @@ export class AlarmBackgroundTimer implements IBackgroundTimer {
         chrome.alarms.clearAll();
     }
 
-    private getAlarmHandler(alarm: chrome.alarms.Alarm): void {
+    private getAlarmHandler(alarm: chrome.alarms.Alarm, instantExecute: boolean = true): void {
         // do nothing if alarm is already registered
         if (alarm) {
             this.stop();
@@ -25,9 +25,9 @@ export class AlarmBackgroundTimer implements IBackgroundTimer {
 
         // register the alarm
         chrome.alarms.create(this.alarmName, {
-            delayInMinutes: 0,
+            delayInMinutes: instantExecute ? undefined : userSettingsDatabase.data.refreshIntervalMinutes,
             periodInMinutes: userSettingsDatabase.data.refreshIntervalMinutes
-        });
+        } as chrome.alarms.AlarmCreateInfo);
 
         // register the even listener
         chrome.alarms.onAlarm.addListener(this.getExecuteEventListener());

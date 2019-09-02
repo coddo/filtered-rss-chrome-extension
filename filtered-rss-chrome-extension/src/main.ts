@@ -9,8 +9,7 @@ Vue.config.productionTip = false;
 // declare lifecycle hooks listener functions
 function onInstalledListener(): void {
     Notifications.requestPermission();
-    feedRefreshTimer.stop();
-    feedRefreshTimer.start();
+    feedRefreshTimer.restart();
 }
 
 function onSuspendListener(): void {

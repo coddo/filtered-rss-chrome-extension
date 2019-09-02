@@ -26,7 +26,7 @@
   export default class Home extends Vue {
     public async beforeCreate(): Promise<void> {
       initializeDatabase();
-      feedRefreshTimer.start();
+      feedRefreshTimer.start(false);
     }
 
     public get displayToolbar(): boolean {
