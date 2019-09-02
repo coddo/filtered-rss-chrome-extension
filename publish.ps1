@@ -6,4 +6,4 @@ if (Test-Path $ZipFile) {
 }
 
 # Create a new zip file
-Compress-Archive -Path ".\css", ".\js", ".\img", "favicon.png", "index.html", "manifest.json" -DestinationPath $ZipFile
+Compress-Archive -Path ".\dist\*" -DestinationPath $ZipFile
