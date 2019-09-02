@@ -2,23 +2,45 @@ import { DashboardItem } from "./types";
 import { UserSettings, userSettingsDatabase } from "./database/user-settings.db";
 
 export class Notifications {
-    public static notifyNewItems(items: DashboardItem[],
-        notificationClickedCallback: (event: Event) => void): DashboardItem[] {
+    public static createNotification(id: string, title: string, text: string, time: number,
+        notificationClickedCallback?: (event: Event) => void): void {
+        // check that the user has enabled notifications
+        const userSettings: UserSettings = userSettingsDatabase.data;
+        if (!userSettings.notificationPopup) {
+            return;
+        }
+
+        const config: NotificationOptions = {
+            body: text,
+            renotify: true,
+            silent: !userSettings.notificationSound,
+            tag: id,
+            timestamp: time,
+        } as NotificationOptions;
+
+        try {
+            // configuration specific to the chrome API, which works only when deployed
+            config.icon = chrome.extension.getURL("favicon.png");
+        } catch {
+            config.icon = "favicon.png";
+        }
+
+        const notif: Notification = new Notification(title, config);
+
+        if (notificationClickedCallback) {
+            notif.onclick = notificationClickedCallback;
+        }
+    }
+
+    public static notifyNewItems(items: DashboardItem[], notificationClickedCallback: (event: Event) => void): DashboardItem[] {
         // check API lelvel permissions
         if (Notification.permission !== "granted") {
             return [];
         }
 
-        const userSettings: UserSettings = userSettingsDatabase.data;
-
-        // check user settings permissions
-        if (!userSettings.notificationPopup) {
-            return [];
-        }
-
         // create the notifications for all the new and unnotified items
         const itemsToNotify: DashboardItem[] = items.filter((i: DashboardItem) => i.isNew && !i.isNotified);
-        Notifications.createNotifications(itemsToNotify, userSettings, notificationClickedCallback);
+        Notifications.createNotifications(itemsToNotify, notificationClickedCallback);
 
         return itemsToNotify;
     }
@@ -29,8 +51,7 @@ export class Notifications {
         }
     }
 
-    private static createNotifications(items: DashboardItem[], userSettings: UserSettings,
-        notificationClickedCallback: (event: Event) => void): void {
+    private static createNotifications(items: DashboardItem[], notificationClickedCallback: (event: Event) => void): void {
         // create specific notification if there is only one new item
         // create a generic notification for multiple items
         if (items.length === 1) {
@@ -41,8 +62,6 @@ export class Notifications {
                 item.title,
                 item.feedName,
                 new Date(item.date).getTime(),
-                userSettings.notificationSound,
-                true,
                 notificationClickedCallback,
             );
             return;
@@ -51,35 +70,8 @@ export class Notifications {
                 "no_id",
                 "New updates in your feeds",
                 "Multiple feeds",
-                Date.now(),
-                userSettings.notificationSound,
-                false,
-                notificationClickedCallback,
+                Date.now()
             );
-        }
-    }
-
-    private static createNotification(id: string, title: string, feedName: string, time: number, useSound: boolean,
-        registerCallbacks: boolean, notificationClickedCallback: (event: Event) => void): void {
-        const config: NotificationOptions = {
-            body: feedName,
-            renotify: true,
-            silent: !useSound,
-            tag: id,
-            timestamp: time,
-        } as NotificationOptions;
-
-        try {
-            // configuration specific to the chrome API, which works only when deployed
-            config.icon = chrome.extension.getURL("favicon.png");
-        } catch {
-            // nothing to do here, we're on localhost
-        }
-
-        const notif: Notification = new Notification(title, config);
-
-        if (registerCallbacks) {
-            notif.onclick = notificationClickedCallback;
         }
     }
 }

@@ -1,29 +1,22 @@
-import { userSettingsDatabase, UserSettings } from "./database/user-settings.db";
-import { coreService } from "./core";
+import { intervalBackgroundTimer, alarmBackgroundTimer } from "./background";
 
-class FeedRefreshTimer {
-    private timerHandle: number = 0;
-
-    public restart(): void {
-        if (this.timerHandle !== 0) {
-            this.stop();
+class FeedRefreshTimer implements IBackgroundTimer {
+    public start(instantExecute: boolean = true): void {
+        try {
+            alarmBackgroundTimer.start(instantExecute);
+        } catch {
+            intervalBackgroundTimer.start(instantExecute);
         }
-
-        const userSettings: UserSettings = userSettingsDatabase.data;
-        this.timerHandle = setTimeout(this.timerHandler.bind(this), userSettings.refreshIntervalMinutes * 60000);
     }
 
     public stop(): void {
-        clearTimeout(this.timerHandle);
-        this.timerHandle = 0;
+        intervalBackgroundTimer.stop();
+        alarmBackgroundTimer.stop();
     }
 
-    private async timerHandler(): Promise<void> {
-        try {
-            await coreService.refreshDashboardCache();
-        } finally {
-            this.restart();
-        }
+    public restart(): void {
+        this.stop();
+        this.start(true);
     }
 }
 

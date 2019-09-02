@@ -1,10 +1,10 @@
-import { DashboardItem, Feed, FeedSettings } from "./types";
+import Vue from "vue";
+import { DashboardItem, Feed } from "./types";
 import { dashboardDatabase } from "./database/dashboard.db";
 import { fetchFeedsAsync } from "./fetcher";
 import { feedsDatabase } from "./database/feeds.db";
 import { convertFeedsToDashboardItems } from "./converters";
 import { Notifications } from "./notifications";
-import Vue from "vue";
 
 class CoreService {
     private readonly serviceState = Vue.observable({

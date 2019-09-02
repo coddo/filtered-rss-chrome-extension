@@ -68,7 +68,7 @@
   import { Component, Vue } from "vue-property-decorator";
   import { UserSettings, userSettingsDatabase } from "@/ts/database/user-settings.db";
   import { configMigrationService } from "@/ts/config-migration";
-import { coreService } from '../ts/core';
+  import { feedRefreshTimer } from "../ts/backround";
 
   @Component({
     components: {
@@ -100,6 +100,8 @@ import { coreService } from '../ts/core';
         notificationSound: userSettings.notificationSound,
         refreshIntervalMinutes: userSettings.refreshIntervalMinutes,
       } as UserSettings;
+
+      feedRefreshTimer.restart();
     }
 
     public exportConfiguration(): void {
@@ -121,7 +123,7 @@ import { coreService } from '../ts/core';
       }, 5000);
 
       if (success) {
-        coreService.refreshDashboardCache();
+        feedRefreshTimer.restart();
       }
     }
   }

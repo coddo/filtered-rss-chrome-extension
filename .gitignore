@@ -15,4 +15,10 @@
 .webpack
 .serverless
 
+# dist related files
+fi-rss.zip
+coddo_signing_key.pem
+dist.crx
+fi-rss.crx
+
 # End of https://www.gitignore.io/api/visualstudiocode

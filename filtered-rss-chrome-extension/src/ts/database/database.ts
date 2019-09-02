@@ -25,6 +25,7 @@ export abstract class Database<T> {
     }
 
     public initialize(): void {
+        window.removeEventListener("storage", this.onStoredDataChanged);
         window.addEventListener("storage", this.onStoredDataChanged);
         this.refreshStore();
     }
