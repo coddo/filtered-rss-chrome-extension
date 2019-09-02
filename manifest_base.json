@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "version": "1.0",
-    "name": "Filtered RSS feed viewer",
+    "name": "Fi.RSS",
     "description": "Filter your RSS feeds to only see what you care about",
 
     "browser_action": {
@@ -17,5 +17,10 @@
     "background": {
         "scripts": [#{scripts_list}],
         "persistent": false
+    },
+    "icons": {
+        "16": "favicon.png",
+        "48": "favicon.png",
+        "128": "favicon.png"
     }
 }
