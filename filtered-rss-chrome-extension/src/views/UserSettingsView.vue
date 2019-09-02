@@ -68,7 +68,6 @@
   import { Component, Vue } from "vue-property-decorator";
   import { UserSettings, userSettingsDatabase } from "@/ts/database/user-settings.db";
   import { configMigrationService } from "@/ts/config-migration";
-  import { coreService } from "../ts/core";
   import { feedRefreshTimer } from "../ts/backround";
 
   @Component({
@@ -124,7 +123,7 @@
       }, 5000);
 
       if (success) {
-        coreService.refreshDashboardCache();
+        feedRefreshTimer.restart();
       }
     }
   }
