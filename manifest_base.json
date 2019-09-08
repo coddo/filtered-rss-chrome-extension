@@ -5,6 +5,7 @@
     "name": "Fi.RSS",
     "description": "Filter your RSS feeds to only see what you care about",
 
+    "content_security_policy": "script-src 'self' 'sha256-PlodC6zWz8v1b2TGEEV7cbrphf4VmV64jB1OBM4oB44='; object-src 'self'",
     "browser_action": {
         "default_icon": "favicon.png",
         "default_popup": "index.html",
