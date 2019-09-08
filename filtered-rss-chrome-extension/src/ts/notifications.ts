@@ -2,6 +2,8 @@ import { DashboardItem } from "./types";
 import { UserSettings, userSettingsDatabase } from "./database/user-settings.db";
 
 export default class Notifications {
+    public static readonly BulkNotificationId = "Multiple-data-key";
+
     public static createNotification(id: string, title: string, text: string, time: number,
         notificationClickedCallback?: (event: Event) => void): void {
             // check that the user has enabled notifications
@@ -71,10 +73,11 @@ export default class Notifications {
             const newItemTitles: string = items.map((item: DashboardItem) => item.title).join("\n");
 
             Notifications.createNotification(
-                "no_id",
+                Notifications.BulkNotificationId,
                 "New updates in your feeds",
                 newItemTitles,
-                Date.now()
+                Date.now(),
+                notificationClickedCallback
             );
         }
     }

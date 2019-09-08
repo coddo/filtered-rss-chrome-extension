@@ -50,10 +50,7 @@ class CoreService {
             dashboardDatabase.data = items;
 
             // notify the user about all the new items
-            const notifiedItems: DashboardItem[] = Notifications.notifyNewItems(
-                items,
-                this.notificationClickedCallback
-            );
+            const notifiedItems: DashboardItem[] = Notifications.notifyNewItems(items, this.notificationClickedCallback);
             if (notifiedItems.length > 0) {
                 // mark the new notifications as notified to user
                 dashboardDatabase.markAsNotified(notifiedItems.map((item: DashboardItem) => item.id));
@@ -89,14 +86,22 @@ class CoreService {
     }
 
     private notificationClickedCallback = (event: Event): void => {
-        event.preventDefault();
-        const item: DashboardItem | undefined = dashboardDatabase.get((event.target as Notification).tag);
+        const notificationId: string = (event.target as Notification).tag;
 
-        if (!item) {
-            return;
+        if (notificationId === Notifications.BulkNotificationId) {
+            dashboardDatabase.data.filter((item: DashboardItem) => item.isNew).forEach((item: DashboardItem) => {
+                this.openItem(item);
+            });
+        } else {
+            const item: DashboardItem | undefined = dashboardDatabase.get(notificationId);
+
+            if (!item) {
+                return;
+            }
+
+            this.openItem(item);
         }
 
-        this.openItem(item);
     }
 }
 
