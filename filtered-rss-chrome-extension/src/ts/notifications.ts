@@ -1,15 +1,13 @@
 import { DashboardItem } from "./types";
 import { UserSettings, userSettingsDatabase } from "./database/user-settings.db";
-import ExtensionBadge from './badge';
-import Badge from './badge';
 
 export default class Notifications {
     public static createNotification(id: string, title: string, text: string, time: number,
         notificationClickedCallback?: (event: Event) => void): void {
-        // check that the user has enabled notifications
-        const userSettings: UserSettings = userSettingsDatabase.data;
-        if (!userSettings.notificationPopup) {
-            return;
+            // check that the user has enabled notifications
+            const userSettings: UserSettings = userSettingsDatabase.data;
+            if (!userSettings.notificationPopup) {
+                return;
         }
 
         const config: NotificationOptions = {
@@ -18,7 +16,7 @@ export default class Notifications {
             silent: !userSettings.notificationSound,
             tag: id,
             timestamp: time,
-        } as NotificationOptions;
+        };
 
         try {
             // configuration specific to the chrome API, which works only when deployed
@@ -70,10 +68,12 @@ export default class Notifications {
             );
             return;
         } else if (items.length > 1) {
+            const newItemTitles: string = items.map((item: DashboardItem) => item.title).join("\n");
+
             Notifications.createNotification(
                 "no_id",
                 "New updates in your feeds",
-                "Multiple feeds",
+                newItemTitles,
                 Date.now()
             );
         }
