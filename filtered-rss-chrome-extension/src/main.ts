@@ -1,8 +1,9 @@
 import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
-import { Notifications } from "./ts/notifications";
+import Notifications from "./ts/notifications";
 import { feedRefreshTimer } from "./ts/backround";
+import Badge from "./ts/badge";
 
 Vue.config.productionTip = false;
 
@@ -10,6 +11,7 @@ Vue.config.productionTip = false;
 function onInstalledListener(): void {
     Notifications.requestPermission();
     feedRefreshTimer.restart();
+    Badge.updatedBadge();
 }
 
 function onSuspendListener(): void {

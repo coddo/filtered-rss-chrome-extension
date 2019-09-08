@@ -4,7 +4,8 @@ import { dashboardDatabase } from "./database/dashboard.db";
 import { fetchFeedsAsync } from "./fetcher";
 import { feedsDatabase } from "./database/feeds.db";
 import { convertFeedsToDashboardItems } from "./converters";
-import { Notifications } from "./notifications";
+import Notifications from "./notifications";
+import Badge from "./badge";
 
 class CoreService {
     private readonly serviceState = Vue.observable({
@@ -57,6 +58,9 @@ class CoreService {
                 // mark the new notifications as notified to user
                 dashboardDatabase.markAsNotified(notifiedItems.map((item: DashboardItem) => item.id));
             }
+
+            // update the badge text to reflect the new items count
+            Badge.updatedBadge();
 
             // return the data
             return items;

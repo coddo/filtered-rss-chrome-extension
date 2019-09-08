@@ -13,10 +13,11 @@
     "permissions": [
         "storage",
         "notifications",
-        "alarms"
+        "alarms",
+        "https://vzir4xjww6.execute-api.eu-west-1.amazonaws.com/live/Fi-RSS-Reverse-Proxy"
     ],
     "background": {
-        "scripts": ["./js/app.a1bb3206.js", "./js/chunk-2d0cf361.87d30520.js", "./js/chunk-2d0db0cf.120434cd.js", "./js/chunk-2d0e5beb.28ced95c.js", "./js/chunk-48446c8c.d79b0690.js", "./js/chunk-65dae1f4.c33e0fb6.js", "./js/chunk-vendors.701ed73f.js"],
+        "scripts": ["./js/app.7f4adbc5.js", "./js/chunk-2d0cf361.c411e28c.js", "./js/chunk-2d0db0cf.120434cd.js", "./js/chunk-2d0e5beb.28ced95c.js", "./js/chunk-48446c8c.d79b0690.js", "./js/chunk-65dae1f4.c33e0fb6.js", "./js/chunk-vendors.701ed73f.js"],
         "persistent": false
     },
     "icons": {

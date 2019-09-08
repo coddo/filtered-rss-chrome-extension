@@ -69,13 +69,14 @@
   import { UserSettings, userSettingsDatabase } from "@/ts/database/user-settings.db";
   import { configMigrationService } from "@/ts/config-migration";
   import { feedRefreshTimer } from "../ts/backround";
+  import { coreService } from "@/ts/core";
 
   @Component({
     components: {
     }
   })
   export default class UserSettingsView extends Vue {
-    private timeoutHandle: number = 0;
+    private timeoutHandle: any = 0;
 
     public readonly acceptedUpdateIntervals: number[] = [1, 2, 3, 5, 10, 15, 20, 25, 30, 40, 50, 60, 75, 90, 105, 120];
     public showDialog: number = 0;
@@ -113,7 +114,12 @@
     }
 
     public importConfigurationCallback(success: boolean): void {
-      this.showDialog = success ? 1 : 2;
+      if (success) {
+        this.showDialog = 1;
+        coreService.refreshDashboardCache();
+      } else {
+        this.showDialog = 2;
+      }
 
       this.timeoutHandle = setTimeout(() => {
         this.showDialog = 0;

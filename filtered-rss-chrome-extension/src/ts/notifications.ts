@@ -1,7 +1,9 @@
 import { DashboardItem } from "./types";
 import { UserSettings, userSettingsDatabase } from "./database/user-settings.db";
+import ExtensionBadge from './badge';
+import Badge from './badge';
 
-export class Notifications {
+export default class Notifications {
     public static createNotification(id: string, title: string, text: string, time: number,
         notificationClickedCallback?: (event: Event) => void): void {
         // check that the user has enabled notifications
@@ -38,8 +40,10 @@ export class Notifications {
             return [];
         }
 
-        // create the notifications for all the new and unnotified items
+        // filter the new items out of the lot
         const itemsToNotify: DashboardItem[] = items.filter((i: DashboardItem) => i.isNew && !i.isNotified);
+
+        // create notifications for the new items
         Notifications.createNotifications(itemsToNotify, notificationClickedCallback);
 
         return itemsToNotify;

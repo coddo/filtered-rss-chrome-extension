@@ -13,7 +13,8 @@
     "permissions": [
         "storage",
         "notifications",
-        "alarms"
+        "alarms",
+        "https://vzir4xjww6.execute-api.eu-west-1.amazonaws.com/live/Fi-RSS-Reverse-Proxy"
     ],
     "background": {
         "scripts": [#{scripts_list}],
