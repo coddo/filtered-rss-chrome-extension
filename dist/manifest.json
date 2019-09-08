@@ -5,6 +5,7 @@
     "name": "Fi.RSS",
     "description": "Filter your RSS feeds to only see what you care about",
 
+    "content_security_policy": "script-src 'self' 'sha256-PlodC6zWz8v1b2TGEEV7cbrphf4VmV64jB1OBM4oB44='; object-src 'self'",
     "browser_action": {
         "default_icon": "favicon.png",
         "default_popup": "index.html",
@@ -13,10 +14,11 @@
     "permissions": [
         "storage",
         "notifications",
-        "alarms"
+        "alarms",
+        "https://vzir4xjww6.execute-api.eu-west-1.amazonaws.com/live/Fi-RSS-Reverse-Proxy"
     ],
     "background": {
-        "scripts": ["./js/app.a1bb3206.js", "./js/chunk-2d0cf361.87d30520.js", "./js/chunk-2d0db0cf.120434cd.js", "./js/chunk-2d0e5beb.28ced95c.js", "./js/chunk-48446c8c.d79b0690.js", "./js/chunk-65dae1f4.c33e0fb6.js", "./js/chunk-vendors.701ed73f.js"],
+        "scripts": ["./js/app.60ef222b.js", "./js/chunk-2d0cf361.c411e28c.js", "./js/chunk-2d0db0cf.120434cd.js", "./js/chunk-2d0e5beb.28ced95c.js", "./js/chunk-48446c8c.d79b0690.js", "./js/chunk-65dae1f4.c33e0fb6.js", "./js/chunk-vendors.701ed73f.js"],
         "persistent": false
     },
     "icons": {

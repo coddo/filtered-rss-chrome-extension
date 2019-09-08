@@ -7,14 +7,23 @@ export class AlarmBackgroundTimer implements IBackgroundTimer {
     private executeEventListener!: (alarm: chrome.alarms.Alarm) => Promise<void>;
 
     public start(instantExecute: boolean = true): void {
-        chrome.alarms.get(this.alarmName, alarm => this.getAlarmHandler(alarm, instantExecute));
+        try {
+            chrome.alarms.get(this.alarmName, alarm => this.getAlarmHandler(alarm, instantExecute));
+        } catch {
+            // only thrown when not in a Chrome context
+        }
     }
 
     public stop(): void {
-        if (chrome.alarms.onAlarm.hasListener(this.getExecuteEventListener())) {
-            chrome.alarms.onAlarm.removeListener(this.getExecuteEventListener());
+        try {
+            if (chrome.alarms.onAlarm.hasListener(this.getExecuteEventListener())) {
+                chrome.alarms.onAlarm.removeListener(this.getExecuteEventListener());
+            }
+
+            chrome.alarms.clearAll();
+        }  catch {
+            // only thrown when not in a Chrome context
         }
-        chrome.alarms.clearAll();
     }
 
     private getAlarmHandler(alarm: chrome.alarms.Alarm, instantExecute: boolean = true): void {

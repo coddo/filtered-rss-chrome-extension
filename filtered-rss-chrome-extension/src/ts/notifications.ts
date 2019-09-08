@@ -1,13 +1,15 @@
 import { DashboardItem } from "./types";
 import { UserSettings, userSettingsDatabase } from "./database/user-settings.db";
 
-export class Notifications {
+export default class Notifications {
+    public static readonly BulkNotificationId = "Multiple-data-key";
+
     public static createNotification(id: string, title: string, text: string, time: number,
         notificationClickedCallback?: (event: Event) => void): void {
-        // check that the user has enabled notifications
-        const userSettings: UserSettings = userSettingsDatabase.data;
-        if (!userSettings.notificationPopup) {
-            return;
+            // check that the user has enabled notifications
+            const userSettings: UserSettings = userSettingsDatabase.data;
+            if (!userSettings.notificationPopup) {
+                return;
         }
 
         const config: NotificationOptions = {
@@ -16,7 +18,7 @@ export class Notifications {
             silent: !userSettings.notificationSound,
             tag: id,
             timestamp: time,
-        } as NotificationOptions;
+        };
 
         try {
             // configuration specific to the chrome API, which works only when deployed
@@ -38,8 +40,10 @@ export class Notifications {
             return [];
         }
 
-        // create the notifications for all the new and unnotified items
+        // filter the new items out of the lot
         const itemsToNotify: DashboardItem[] = items.filter((i: DashboardItem) => i.isNew && !i.isNotified);
+
+        // create notifications for the new items
         Notifications.createNotifications(itemsToNotify, notificationClickedCallback);
 
         return itemsToNotify;
@@ -66,11 +70,14 @@ export class Notifications {
             );
             return;
         } else if (items.length > 1) {
+            const newItemTitles: string = items.map((item: DashboardItem) => item.title).join("\n");
+
             Notifications.createNotification(
-                "no_id",
+                Notifications.BulkNotificationId,
                 "New updates in your feeds",
-                "Multiple feeds",
-                Date.now()
+                newItemTitles,
+                Date.now(),
+                notificationClickedCallback
             );
         }
     }

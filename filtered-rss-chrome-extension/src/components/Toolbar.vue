@@ -27,6 +27,7 @@
   import { Component, Vue } from "vue-property-decorator";
   import { coreService } from "@/ts/core";
   import { dashboardDatabase } from "@/ts/database/dashboard.db";
+  import Badge from "@/ts/badge";
 
   @Component({
     components: {
@@ -51,6 +52,8 @@
       for (const item of dashboardDatabase.newItems) {
         dashboardDatabase.markAsNotNew(item.id);
       }
+
+      Badge.updatedBadge();
     }
   }
 </script>

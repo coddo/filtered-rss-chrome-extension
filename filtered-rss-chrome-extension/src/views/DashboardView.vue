@@ -39,6 +39,7 @@
   import LoadingDashboardPlaceholder from "@/components/LoadingDashboardPlaceholder.vue";
   import { dashboardDatabase } from "@/ts/database/dashboard.db";
   import { coreService } from "@/ts/core";
+  import Badge from "@/ts/badge";
 
   @Component({
     components: {
@@ -66,6 +67,7 @@
 
     public markItemAsNotNew(itemId: string): void {
       dashboardDatabase.markAsNotNew(itemId);
+      Badge.updatedBadge();
     }
 
     public feedFaviconUrl(feedName: string): string {
