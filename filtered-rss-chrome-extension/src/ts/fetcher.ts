@@ -17,7 +17,8 @@ export async function fetchFeedsAsync(configuredFeeds: FeedSettings[]): Promise<
 }
 
 export async function fetchFeedDataAsync(configuredFeed: FeedSettings): Promise<Feed | null> {
-    const response: Response = await fetch(`${CorsBackend}?feed=${configuredFeed.url}`);
+    const encodedFeedUrl: string = encodeURIComponent(configuredFeed.url);
+    const response: Response = await fetch(`${CorsBackend}?feed=${encodedFeedUrl}`);
 
     if (!response || response.status !== 200 || !response.body) {
         return null;
