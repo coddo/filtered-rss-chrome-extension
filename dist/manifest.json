@@ -19,7 +19,7 @@
         "https://www.google-analytics.com/analytics.js"
     ],
     "background": {
-        "scripts": ["./js/app.d500377e.js", "./js/chunk-2d0cf361.c411e28c.js", "./js/chunk-2d0db0cf.120434cd.js", "./js/chunk-2d0e5beb.28ced95c.js", "./js/chunk-48446c8c.d79b0690.js", "./js/chunk-65dae1f4.c33e0fb6.js", "./js/chunk-vendors.701ed73f.js"],
+        "scripts": ["./js/app.51adee14.js", "./js/chunk-2d0cf361.c411e28c.js", "./js/chunk-2d0db0cf.120434cd.js", "./js/chunk-2d0e5beb.28ced95c.js", "./js/chunk-48446c8c.d79b0690.js", "./js/chunk-65dae1f4.c33e0fb6.js", "./js/chunk-vendors.701ed73f.js"],
         "persistent": false
     },
     "icons": {
