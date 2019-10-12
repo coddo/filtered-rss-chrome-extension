@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
-    "version": "1.0.5",
-    "version_name": "1.0-beta3",
+    "version": "1.0.6",
+    "version_name": "1.0-beta4",
     "name": "Fi.RSS",
     "description": "Filter your RSS feeds to only see what you care about",
 
