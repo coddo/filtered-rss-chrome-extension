@@ -67,8 +67,6 @@ class CoreService {
     }
 
     public openItem(item: DashboardItem): void {
-        dashboardDatabase.markAsNotNew(item.id);
-
         try {
             chrome.tabs.create({
                 url: item.link,
@@ -76,7 +74,14 @@ class CoreService {
             });
         } catch {
             window.open(item.link, "_blank");
+        } finally {
+            this.markItemAsNotNew(item.id);
         }
+    }
+
+    public markItemAsNotNew(itemId: string): void {
+        dashboardDatabase.markAsNotNew(itemId);
+        Badge.updatedBadge();
     }
 
     private async getLiveDataAsync(): Promise<DashboardItem[]> {

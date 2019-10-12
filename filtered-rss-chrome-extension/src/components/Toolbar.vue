@@ -50,10 +50,8 @@
 
     public clearNotifications(): void {
       for (const item of dashboardDatabase.newItems) {
-        dashboardDatabase.markAsNotNew(item.id);
+        coreService.markItemAsNotNew(item.id);
       }
-
-      Badge.updatedBadge();
     }
   }
 </script>
