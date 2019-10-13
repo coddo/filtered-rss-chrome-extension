@@ -16,9 +16,13 @@
 .serverless
 
 # dist related files
-fi-rss.zip
+fi-rss-chrome.zip
+fi-rss-firefox.zip
 coddo_signing_key.pem
 dist.crx
 fi-rss.crx
+dist/
+dist-chrome/
+dist-firefox/
 
 # End of https://www.gitignore.io/api/visualstudiocode
