@@ -1,14 +1,15 @@
-### Step 1 - Chrome
-
-# Set the location at the root the extension
-if (!(Test-Path -Path ".\manifest_base.json")) {
-    Set-Location ..
-}
-
 # Declare variables
 $BuildPath = ".\filtered-rss-chrome-extension\dist"
 $DistPathChrome = ".\dist-chrome"
 $DistPathFirefox = ".\dist-firefox"
+$ManifestBase = ".\manifest_base.json"
+
+### Step 1 - Chrome
+
+# Set the location at the root the extension
+if (!(Test-Path -Path "$ManifestBase")) {
+    Set-Location ..
+}
 
 # Remove previous build output
 if (Test-Path -Path $DistPathChrome) {
@@ -22,7 +23,7 @@ Copy-Item -Recurse -Path "$BuildPath" -Destination "$DistPathChrome"
 $JsFiles = $(Get-ChildItem "$DistPathChrome\js" | Where-Object { $_.extension -eq ".js" } | Select-Object -ExpandProperty Name | ForEach-Object { "`"./js/$($_)`"" });
 $JsFilesListString = $($JsFiles -join ", ")
 
-$(Get-Content -Path ".\manifest_base.json") -replace "#{scripts_list}", "$JsFilesListString" | Set-Content -Path "$DistPathChrome\manifest.json"
+$(Get-Content -Path "$ManifestBase") -replace "#{scripts_list}", "$JsFilesListString" | Set-Content -Path "$DistPathChrome\manifest.json"
 
 
 
@@ -48,16 +49,16 @@ $(Get-Content -Path ".\index.html") -replace "/css/", "" | Set-Content -Path ".\
 
 # Patch file references in JS and CSS files
 Get-ChildItem ".\js\" | 
-    Foreach-Object {
-        $(Get-Content -Path $_.FullName) -replace "`"js/", "`"" | Set-Content -Path $_.FullName
-        $(Get-Content -Path $_.FullName) -replace "css/", "" | Set-Content -Path $_.FullName
-        $(Get-Content -Path $_.FullName) -replace "img/", "" | Set-Content -Path $_.FullName
-    }
+Foreach-Object {
+    $(Get-Content -Path $_.FullName) -replace "`"js/", "`"" | Set-Content -Path $_.FullName
+    $(Get-Content -Path $_.FullName) -replace "css/", "" | Set-Content -Path $_.FullName
+    $(Get-Content -Path $_.FullName) -replace "img/", "" | Set-Content -Path $_.FullName
+}
 
 Get-ChildItem ".\css\" | 
-    Foreach-Object {
-        $(Get-Content -Path $_.FullName) -replace "img/", "" | Set-Content -Path $_.FullName
-    }
+Foreach-Object {
+    $(Get-Content -Path $_.FullName) -replace "img/", "" | Set-Content -Path $_.FullName
+}
 
 # Flatten the directory structure
 Copy-Item -Path ".\js\*" -Destination ".\" -Recurse
@@ -66,3 +67,6 @@ Copy-Item -Path ".\img\*" -Destination ".\" -Recurse
 Remove-Item -LiteralPath ".\js" -Force -Recurse
 Remove-Item -LiteralPath ".\css" -Force -Recurse
 Remove-Item -LiteralPath ".\img" -Force -Recurse
+
+# Get back to the initial directory
+Set-Location ..
